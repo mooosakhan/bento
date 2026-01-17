@@ -1,0 +1,54 @@
+import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Block } from '@/types';
+import { SortableBlockItem } from './SortableBlockItem';
+
+interface CanvasProps {
+  blocks: Block[];
+  selectedBlockId: string | null;
+  onSelectBlock: (blockId: string | null) => void;
+  viewMode: 'mobile' | 'desktop';
+}
+
+export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode }: CanvasProps) {
+  const { setNodeRef } = useDroppable({
+    id: 'canvas',
+  });
+
+  const containerWidth = viewMode === 'mobile' ? 'max-w-md' : 'max-w-2xl';
+
+  return (
+    <div className="h-full overflow-y-auto bg-neutral-100 p-8">
+      <div 
+        ref={setNodeRef}
+        className={`mx-auto ${containerWidth} min-h-full bg-white rounded-3xl shadow-xl p-6 transition-all duration-300`}
+      >
+        {blocks.length === 0 ? (
+          <div className="flex items-center justify-center h-64 border-2 border-dashed border-neutral-300 rounded-2xl">
+            <div className="text-center text-neutral-400">
+              <p className="text-lg font-medium">Drag blocks here to start</p>
+              <p className="text-sm mt-2">Or click on a block to add it</p>
+            </div>
+          </div>
+        ) : (
+          <SortableContext 
+            items={blocks.map(b => b.id)} 
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-4">
+              {blocks.map((block) => (
+                <SortableBlockItem
+                  key={block.id}
+                  block={block}
+                  isSelected={block.id === selectedBlockId}
+                  onSelect={() => onSelectBlock(block.id)}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        )}
+      </div>
+    </div>
+  );
+}
