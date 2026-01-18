@@ -5,9 +5,14 @@ export interface Profile {
   avatarUrl: string;
   theme: Theme;
   blocks: Block[];
+  portfolioMeta?: {
+    title?: string;
+    tagline?: string;
+  };
 }
 
 export interface Theme {
+  mode: 'light' | 'dark' | 'system';
   background: string;
   cardStyle: 'default' | 'outlined' | 'filled';
   accentColor: string;
@@ -27,7 +32,11 @@ export type BlockType =
   | 'gallery' 
   | 'card' 
   | 'divider' 
-  | 'socialRow';
+  | 'socialRow'
+  | 'sectionHeader'
+  | 'skills'
+  | 'experience'
+  | 'projects';
 
 // Block-specific prop types
 export interface HeaderBlockProps {
@@ -67,11 +76,50 @@ export interface SocialRowBlockProps {
   github?: string;
 }
 
+export interface SectionHeaderBlockProps {
+  title: string;
+  subtitle?: string;
+}
+
+export interface Skill {
+  name: string;
+  level?: 'Beginner' | 'Intermediate' | 'Advanced';
+}
+
+export interface SkillsBlockProps {
+  skills: Skill[];
+  layout: 'chips' | 'grid';
+}
+
+export interface ExperienceItem {
+  role: string;
+  company: string;
+  startDate: string;
+  endDate?: string;
+  description: string;
+}
+
+export interface ExperienceBlockProps {
+  items: ExperienceItem[];
+}
+
+export interface Project {
+  title: string;
+  description: string;
+  image?: string;
+  techStack?: string[];
+  link?: string;
+}
+
+export interface ProjectsBlockProps {
+  projects: Project[];
+}
+
 // Inspector field configuration
 export interface InspectorField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'url' | 'select' | 'toggle' | 'image-list';
+  type: 'text' | 'textarea' | 'url' | 'select' | 'toggle' | 'image-list' | 'skills-editor' | 'experience-editor' | 'projects-editor';
   placeholder?: string;
   options?: { value: string; label: string }[];
 }

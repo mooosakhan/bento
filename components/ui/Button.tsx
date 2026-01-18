@@ -16,9 +16,9 @@ export function Button({
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantClasses = {
-    primary: 'bg-neutral-900 text-white hover:bg-neutral-800 shadow-sm hover:shadow-md',
-    secondary: 'bg-white text-neutral-900 border border-neutral-300 hover:border-neutral-400 shadow-sm hover:shadow-md',
-    ghost: 'bg-transparent text-neutral-700 hover:bg-neutral-100',
+    primary: 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-sm hover:shadow-md',
+    secondary: 'bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 shadow-sm hover:shadow-md',
+    ghost: 'bg-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800',
     danger: 'bg-red-500 text-white hover:bg-red-600 shadow-sm hover:shadow-md',
   };
   

@@ -13,6 +13,7 @@ export function generateHandle(displayName: string): string {
 
 /**
  * Gets the profile from localStorage
+ * Ensures backward compatibility by adding default mode if missing
  */
 export function getProfile() {
   if (typeof window === 'undefined') return null;
@@ -20,7 +21,12 @@ export function getProfile() {
   const saved = localStorage.getItem('bento-profile');
   if (saved) {
     try {
-      return JSON.parse(saved);
+      const profile = JSON.parse(saved);
+      // Migration: Add default theme mode if it doesn't exist
+      if (profile.theme && !profile.theme.mode) {
+        profile.theme.mode = 'light';
+      }
+      return profile;
     } catch (e) {
       console.error('Failed to parse profile:', e);
     }

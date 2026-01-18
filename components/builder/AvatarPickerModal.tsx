@@ -18,20 +18,20 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white dark:bg-neutral-800 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-200">
+        <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-700">
           <div>
-            <h2 className="text-2xl font-bold text-neutral-900">Choose Avatar</h2>
-            <p className="text-sm text-neutral-500 mt-1">
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">Choose Avatar</h2>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
               Upload, paste a URL, or choose from presets
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
           >
-            <X className="w-5 h-5 text-neutral-600" />
+            <X className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
           </button>
         </div>
 
@@ -41,8 +41,8 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
             onClick={() => setActiveTab('preset')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-medium transition-all ${
               activeTab === 'preset'
-                ? 'bg-neutral-900 text-white shadow-md'
-                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-md'
+                : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600'
             }`}
           >
             <ImageIcon className="w-4 h-4" />
@@ -52,8 +52,8 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
             onClick={() => setActiveTab('upload')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-medium transition-all ${
               activeTab === 'upload'
-                ? 'bg-neutral-900 text-white shadow-md'
-                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-md'
+                : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600'
             }`}
           >
             <Upload className="w-4 h-4" />
@@ -63,8 +63,8 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
             onClick={() => setActiveTab('url')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-medium transition-all ${
               activeTab === 'url'
-                ? 'bg-neutral-900 text-white shadow-md'
-                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                ? 'bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-md'
+                : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600'
             }`}
           >
             <LinkIcon className="w-4 h-4" />
@@ -105,8 +105,8 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t border-neutral-200 bg-neutral-50">
-          <p className="text-sm text-neutral-500">
+        <div className="flex items-center justify-between p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {activeTab === 'upload' && 'Max 2MB • JPG, PNG, WebP'}
             {activeTab === 'url' && 'Paste any image URL'}
             {activeTab === 'preset' && 'Choose from our curated collection'}

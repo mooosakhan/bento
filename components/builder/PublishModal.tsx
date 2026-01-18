@@ -19,20 +19,20 @@ export function PublishModal({ handle, onClose }: PublishModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+      <div className="bg-white dark:bg-neutral-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-200">
+        <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-700">
           <div>
-            <h2 className="text-2xl font-bold text-neutral-900">🎉 Profile Published!</h2>
-            <p className="text-sm text-neutral-500 mt-1">
+            <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">🎉 Profile Published!</h2>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
               Your profile is live and ready to share
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
           >
-            <X className="w-5 h-5 text-neutral-600" />
+            <X className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
           </button>
         </div>
 
@@ -40,11 +40,11 @@ export function PublishModal({ handle, onClose }: PublishModalProps) {
         <div className="p-6 space-y-6">
           {/* Profile URL */}
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">
+            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               Your Profile URL
             </label>
             <div className="flex gap-2">
-              <div className="flex-1 px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm text-neutral-900 overflow-x-auto">
+              <div className="flex-1 px-4 py-3 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-xl text-sm text-neutral-900 dark:text-white overflow-x-auto">
                 {profileUrl}
               </div>
               <Button
@@ -68,8 +68,8 @@ export function PublishModal({ handle, onClose }: PublishModalProps) {
           </div>
 
           {/* Live Updates Notice */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <p className="text-sm text-blue-900">
+          <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+            <p className="text-sm text-blue-900 dark:text-blue-200">
               <strong>✨ Live Updates:</strong> Any changes you make in the builder will automatically appear on your public profile—no need to republish!
             </p>
           </div>

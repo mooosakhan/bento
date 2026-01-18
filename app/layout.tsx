@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
 
 const poppins = Poppins({ 
   subsets: ['latin'],
@@ -9,8 +10,8 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'BentoBuilder - Profile Builder',
-  description: 'Create your beautiful link-in-bio profile page',
+  title: 'BentoBuilder - Portfolio Builder',
+  description: 'Create your beautiful portfolio profile page',
 }
 
 export default function RootLayout({
@@ -19,8 +20,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={poppins.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={poppins.className}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

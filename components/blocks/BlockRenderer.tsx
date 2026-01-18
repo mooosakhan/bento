@@ -6,6 +6,10 @@ import { GalleryBlockRenderer } from './GalleryBlock';
 import { CardBlockRenderer } from './CardBlock';
 import { DividerBlockRenderer } from './DividerBlock';
 import { SocialRowBlockRenderer } from './SocialRowBlock';
+import { SectionHeaderBlockRenderer } from './SectionHeaderBlock';
+import { SkillsBlockRenderer } from './SkillsBlock';
+import { ExperienceBlockRenderer } from './ExperienceBlock';
+import { ProjectsBlockRenderer } from './ProjectsBlock';
 
 interface BlockRendererProps {
   block: Block;
@@ -25,6 +29,14 @@ export function BlockRenderer({ block }: BlockRendererProps) {
       return <DividerBlockRenderer props={block.props} />;
     case 'socialRow':
       return <SocialRowBlockRenderer props={block.props} />;
+    case 'sectionHeader':
+      return <SectionHeaderBlockRenderer props={block.props} />;
+    case 'skills':
+      return <SkillsBlockRenderer props={block.props} />;
+    case 'experience':
+      return <ExperienceBlockRenderer props={block.props} />;
+    case 'projects':
+      return <ProjectsBlockRenderer props={block.props} />;
     default:
       return <div>Unknown block type</div>;
   }

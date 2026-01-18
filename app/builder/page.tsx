@@ -18,6 +18,8 @@ import { BlockLibrary } from '@/components/builder/BlockLibrary';
 import { Canvas } from '@/components/builder/Canvas';
 import { Inspector } from '@/components/builder/Inspector';
 import { PublishModal } from '@/components/builder/PublishModal';
+import { TemplatePickerModal } from '@/components/builder/TemplatePickerModal';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { 
   Eye, 
@@ -26,9 +28,15 @@ import {
   Undo2, 
   Redo2, 
   Smartphone, 
+  Tablet,
   Monitor,
   Menu,
-  X
+  X,
+  LayoutTemplate,
+  MoveLeft,
+  MoveUpLeftIcon,
+  Backpack,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function BuilderPage() {
@@ -38,6 +46,7 @@ export default function BuilderPage() {
     bio: 'Your bio',
     avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=default',
     theme: {
+      mode: 'light',
       background: '#f7f7f7',
       cardStyle: 'default',
       accentColor: '#000000',
@@ -51,10 +60,11 @@ export default function BuilderPage() {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isSaved, setIsSaved] = useState(true);
   const [isPreview, setIsPreview] = useState(false);
-  const [viewMode, setViewMode] = useState<'mobile' | 'desktop'>('mobile');
+  const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -186,6 +196,12 @@ export default function BuilderPage() {
     }
   };
 
+  const loadTemplate = (blocks: Block[]) => {
+    setProfile(prev => ({ ...prev, blocks }));
+    addToHistory(blocks);
+    setSelectedBlockId(null);
+  };
+
   const handleDragStart = (event: DragStartEvent) => {
     setActiveDragId(event.active.id as string);
   };
@@ -216,20 +232,58 @@ export default function BuilderPage() {
 
   const selectedBlock = profile.blocks.find(b => b.id === selectedBlockId) || null;
 
+  const previewContainerWidth = 
+    viewMode === 'mobile' ? 'max-w-md' : 
+    viewMode === 'tablet' ? 'max-w-3xl' : 
+    'max-w-5xl';
+
   if (isPreview) {
     return (
-      <div className="min-h-screen bg-neutral-100">
-        <div className="bg-white border-b border-neutral-200 px-6 py-4">
+      <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900">
+        <div className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <h1 className="text-xl font-bold">Preview Mode</h1>
+            <div className="flex items-center gap-4">
+              {/* <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Preview Mode</h1> */}
+              
+              {/* View Mode Toggle in Preview */}
+              <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-full p-1">
+                <button
+                  onClick={() => setViewMode('mobile')}
+                  className={`px-3 py-1.5 rounded-full transition-colors ${
+                    viewMode === 'mobile' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
+                  title="Mobile view"
+                >
+                  <Smartphone className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('tablet')}
+                  className={`px-3 py-1.5 rounded-full transition-colors ${
+                    viewMode === 'tablet' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
+                  title="Tablet view"
+                >
+                  <Tablet className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('desktop')}
+                  className={`px-3 py-1.5 rounded-full transition-colors ${
+                    viewMode === 'desktop' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
+                  title="Desktop view"
+                >
+                  <Monitor className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
             <Button variant="secondary" onClick={() => setIsPreview(false)}>
-              <X className="w-4 h-4 mr-2" />
-              Exit Preview
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
             </Button>
           </div>
         </div>
         <div className="p-8">
-          <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-6">
+          <div className={`${previewContainerWidth} mx-auto bg-white dark:bg-neutral-800 rounded-3xl shadow-xl dark:shadow-2xl p-6 transition-all duration-300`}>
             <div className="space-y-4">
               {profile.blocks.map(block => (
                 <div key={block.id}>
@@ -245,40 +299,54 @@ export default function BuilderPage() {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="h-screen flex flex-col bg-neutral-50">
+      <div className="h-screen flex flex-col bg-neutral-50 dark:bg-neutral-900">
         {/* Top Bar */}
-        <header className="bg-white border-b border-neutral-200 px-6 py-4">
+        <header className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               <button 
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden"
+                className="lg:hidden text-neutral-900 dark:text-white"
               >
                 <Menu className="w-6 h-6" />
               </button>
-              <h1 className="text-2xl font-bold">BentoBuilder</h1>
+              <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">BentoBuilder</h1>
             </div>
 
             <div className="flex items-center gap-3">
               {/* View Mode Toggle */}
-              <div className="hidden md:flex items-center gap-1 bg-neutral-100 rounded-full p-1">
+              <div className="hidden md:flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-full p-1">{" "}
                 <button
                   onClick={() => setViewMode('mobile')}
                   className={`px-3 py-1.5 rounded-full transition-colors ${
-                    viewMode === 'mobile' ? 'bg-white shadow-sm' : ''
+                    viewMode === 'mobile' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
                   }`}
+                  title="Mobile view"
                 >
                   <Smartphone className="w-4 h-4" />
                 </button>
                 <button
+                  onClick={() => setViewMode('tablet')}
+                  className={`px-3 py-1.5 rounded-full transition-colors ${
+                    viewMode === 'tablet' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
+                  title="Tablet view"
+                >
+                  <Tablet className="w-4 h-4" />
+                </button>
+                <button
                   onClick={() => setViewMode('desktop')}
                   className={`px-3 py-1.5 rounded-full transition-colors ${
-                    viewMode === 'desktop' ? 'bg-white shadow-sm' : ''
+                    viewMode === 'desktop' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
                   }`}
+                  title="Desktop view"
                 >
                   <Monitor className="w-4 h-4" />
                 </button>
               </div>
+
+              {/* Theme Toggle */}
+              <ThemeToggle />
 
               {/* Undo/Redo */}
               <div className="flex gap-1">
@@ -300,7 +368,16 @@ export default function BuilderPage() {
                 </Button>
               </div>
 
-              <div className="h-6 w-px bg-neutral-300" />
+              <div className="h-6 w-px bg-neutral-300 dark:bg-neutral-600" />
+
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowTemplatePicker(true)}
+              >
+                <LayoutTemplate className="w-4 h-4 mr-2" />
+                Templates
+              </Button>
 
               <Button variant="ghost" size="sm" onClick={() => setIsPreview(true)}>
                 <Eye className="w-4 h-4 mr-2" />
@@ -319,7 +396,7 @@ export default function BuilderPage() {
                 href={`/u/${profile.handle}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-neutral-600 hover:text-neutral-900 transition-colors"
+                className="text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
               >
                 /u/{profile.handle}
               </a>
@@ -329,12 +406,12 @@ export default function BuilderPage() {
               </Button>
 
               {!isSaved && (
-                <span className="text-xs text-neutral-500 flex items-center gap-1">
+                <span className="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
                   <Save className="w-3 h-3" /> Saving...
                 </span>
               )}
               {isSaved && (
-                <span className="text-xs text-green-600 flex items-center gap-1">
+                <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
                   <Save className="w-3 h-3" /> Saved
                 </span>
               )}
@@ -345,11 +422,11 @@ export default function BuilderPage() {
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Sidebar - Block Library */}
-          <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white border-r border-neutral-200 overflow-hidden transition-all duration-300`}>
+          <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700 overflow-hidden transition-all duration-300`}>
             <div className="h-full overflow-y-auto">
-              <div className="sticky top-0 bg-white border-b border-neutral-200 px-6 py-4 z-10">
-                <h2 className="text-lg font-bold text-neutral-900">Blocks</h2>
-                <p className="text-xs text-neutral-500 mt-0.5">Drag or click to add</p>
+              <div className="sticky top-0 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 z-10">
+                <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Blocks</h2>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">Drag or click to add</p>
               </div>
               <div className="p-6">
                 <BlockLibrary onAddBlock={addBlock} />
@@ -368,7 +445,7 @@ export default function BuilderPage() {
           </main>
 
           {/* Right Sidebar - Inspector */}
-          <aside className="w-80 bg-neutral-50 border-l border-neutral-200 overflow-y-auto">
+          <aside className="w-80 bg-neutral-50 dark:bg-neutral-850 border-l border-neutral-200 dark:border-neutral-700 overflow-y-auto">
             <Inspector
               selectedBlock={selectedBlock}
               onUpdateBlock={updateBlock}
@@ -392,6 +469,13 @@ export default function BuilderPage() {
         <PublishModal
           handle={profile.handle}
           onClose={() => setShowPublishModal(false)}
+        />
+      )}
+
+      {showTemplatePicker && (
+        <TemplatePickerModal
+          onSelect={loadTemplate}
+          onClose={() => setShowTemplatePicker(false)}
         />
       )}
     </DndContext>

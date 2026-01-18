@@ -8,7 +8,7 @@ interface GalleryBlockRendererProps {
 export function GalleryBlockRenderer({ props }: GalleryBlockRendererProps) {
   if (!props.images || props.images.length === 0) {
     return (
-      <div className="text-center py-8 text-neutral-400">
+      <div className="text-center py-8 text-neutral-400 dark:text-neutral-500">
         No images added
       </div>
     );
@@ -19,7 +19,7 @@ export function GalleryBlockRenderer({ props }: GalleryBlockRendererProps) {
       {props.images.map((imageUrl, index) => (
         <div 
           key={index} 
-          className="aspect-square rounded-xl overflow-hidden bg-neutral-100"
+          className="aspect-square rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-700"
         >
           <img 
             src={imageUrl} 

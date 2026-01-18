@@ -6,7 +6,11 @@ import {
   GalleryBlockProps,
   CardBlockProps,
   DividerBlockProps,
-  SocialRowBlockProps 
+  SocialRowBlockProps,
+  SectionHeaderBlockProps,
+  SkillsBlockProps,
+  ExperienceBlockProps,
+  ProjectsBlockProps
 } from '@/types';
 
 export const blockRegistry: Record<BlockType, BlockDefinition> = {
@@ -108,6 +112,77 @@ export const blockRegistry: Record<BlockType, BlockDefinition> = {
       { key: 'instagram', label: 'Instagram Username', type: 'text', placeholder: '@username' },
       { key: 'linkedin', label: 'LinkedIn Username', type: 'text', placeholder: 'username' },
       { key: 'github', label: 'GitHub Username', type: 'text', placeholder: 'username' },
+    ],
+  },
+  sectionHeader: {
+    type: 'sectionHeader',
+    label: 'Section Header',
+    icon: 'Heading',
+    defaultProps: {
+      title: 'Section Title',
+      subtitle: '',
+    } as SectionHeaderBlockProps,
+    inspectorFields: [
+      { key: 'title', label: 'Title', type: 'text', placeholder: 'Section Title' },
+      { key: 'subtitle', label: 'Subtitle', type: 'text', placeholder: 'Optional subtitle' },
+    ],
+  },
+  skills: {
+    type: 'skills',
+    label: 'Skills',
+    icon: 'Award',
+    defaultProps: {
+      skills: [
+        { name: 'JavaScript', level: 'Advanced' },
+        { name: 'React', level: 'Advanced' },
+        { name: 'TypeScript', level: 'Intermediate' },
+      ],
+      layout: 'chips',
+    } as SkillsBlockProps,
+    inspectorFields: [
+      { key: 'skills', label: 'Skills', type: 'skills-editor' },
+      { key: 'layout', label: 'Layout', type: 'select', options: [
+        { value: 'chips', label: 'Chips' },
+        { value: 'grid', label: 'Grid' },
+      ]},
+    ],
+  },
+  experience: {
+    type: 'experience',
+    label: 'Experience',
+    icon: 'Briefcase',
+    defaultProps: {
+      items: [
+        {
+          role: 'Senior Developer',
+          company: 'Tech Company',
+          startDate: 'Jan 2023',
+          endDate: '',
+          description: 'Building amazing products with modern technologies.',
+        },
+      ],
+    } as ExperienceBlockProps,
+    inspectorFields: [
+      { key: 'items', label: 'Experience Items', type: 'experience-editor' },
+    ],
+  },
+  projects: {
+    type: 'projects',
+    label: 'Projects',
+    icon: 'FolderGit2',
+    defaultProps: {
+      projects: [
+        {
+          title: 'My Awesome Project',
+          description: 'A brief description of what this project does and why it matters.',
+          image: '',
+          techStack: ['React', 'TypeScript', 'Tailwind'],
+          link: 'https://example.com',
+        },
+      ],
+    } as ProjectsBlockProps,
+    inspectorFields: [
+      { key: 'projects', label: 'Projects', type: 'projects-editor' },
     ],
   },
 };

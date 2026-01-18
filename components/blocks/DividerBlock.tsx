@@ -13,6 +13,6 @@ export function DividerBlockRenderer({ props }: DividerBlockRendererProps) {
   };
 
   return (
-    <hr className={`border-neutral-300 ${styleClasses[props.style]} my-4`} />
+    <hr className={`border-neutral-300 dark:border-neutral-700 ${styleClasses[props.style]} my-4`} />
   );
 }

@@ -8,9 +8,9 @@ interface CardBlockRendererProps {
 
 export function CardBlockRenderer({ props }: CardBlockRendererProps) {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white dark:bg-neutral-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
       {props.imageUrl && (
-        <div className="aspect-video w-full bg-neutral-100 overflow-hidden">
+        <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-700 overflow-hidden">
           <img 
             src={props.imageUrl} 
             alt={props.title}
@@ -19,11 +19,11 @@ export function CardBlockRenderer({ props }: CardBlockRendererProps) {
         </div>
       )}
       <div className="p-6">
-        <h3 className="text-xl font-bold text-neutral-900 mb-2">
+        <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
           {props.title}
         </h3>
         {props.description && (
-          <p className="text-neutral-600 mb-4">
+          <p className="text-neutral-600 dark:text-neutral-400 mb-4">
             {props.description}
           </p>
         )}
@@ -32,7 +32,7 @@ export function CardBlockRenderer({ props }: CardBlockRendererProps) {
             href={props.ctaUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-full hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors"
           >
             <span>{props.ctaText}</span>
             <ExternalLink className="w-4 h-4" />
