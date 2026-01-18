@@ -49,11 +49,11 @@ export function ProjectsEditor({ projects, onChange }: ProjectsEditorProps) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-neutral-700">
+      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
         Projects
       </label>
       
-      <div className="space-y-4 overflow-y-auto">
+      <div className="space-y-4 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {projects.map((project, index) => (
           <div key={index} className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4 space-y-3">
             <div className="flex items-start gap-2">

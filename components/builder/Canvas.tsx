@@ -22,7 +22,7 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode }: Can
     'max-w-5xl';
 
   return (
-    <div className="h-full overflow-y-auto bg-neutral-100 dark:bg-neutral-900 p-8">
+    <div className="h-full overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark bg-neutral-100 dark:bg-neutral-900 p-8">
       <div 
         ref={setNodeRef}
         className={`mx-auto ${containerWidth} min-h-full bg-white dark:bg-neutral-800 rounded-3xl shadow-xl dark:shadow-2xl p-6 transition-all duration-300`}

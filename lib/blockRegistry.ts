@@ -85,7 +85,7 @@ export const blockRegistry: Record<BlockType, BlockDefinition> = {
   divider: {
     type: 'divider',
     label: 'Divider',
-    icon: 'Minus',
+    icon: 'AlignVerticalJustifyCenter',
     defaultProps: {
       style: 'solid',
     } as DividerBlockProps,

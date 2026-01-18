@@ -36,13 +36,13 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-neutral-700">
+      <label className="block text-sm font-medium  dark:text-neutral-300">
         Experience
       </label>
       
-      <div className="space-y-4 max-h-96 overflow-y-auto">
+      <div className="space-y-4 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {items.map((item, index) => (
-          <div key={index} className="bg-neutral-50 rounded-lg p-4 space-y-3">
+          <div key={index} className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4 space-y-3">
             <div className="flex items-start gap-2">
               <GripVertical className="w-4 h-4 text-neutral-400 mt-3" />
               <div className="flex-1 space-y-3">

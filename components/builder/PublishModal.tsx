@@ -44,7 +44,7 @@ export function PublishModal({ handle, onClose }: PublishModalProps) {
               Your Profile URL
             </label>
             <div className="flex gap-2">
-              <div className="flex-1 px-4 py-3 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-xl text-sm text-neutral-900 dark:text-white overflow-x-auto">
+              <div className="flex-1 px-4 py-3 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-xl text-sm text-neutral-900 dark:text-white overflow-x-auto scrollbar-light scrollbar-dark">
                 {profileUrl}
               </div>
               <Button

@@ -77,7 +77,7 @@ export function Inspector({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-white dark:bg-neutral-900">
+      <div className="flex-1 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark p-6 space-y-5 bg-white dark:bg-neutral-900">
         {/* Avatar Picker for Header Block */}
         {selectedBlock.type === 'header' && (
           <div>

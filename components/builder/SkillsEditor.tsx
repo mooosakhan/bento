@@ -35,7 +35,7 @@ export function SkillsEditor({ skills, onChange }: SkillsEditorProps) {
         Skills
       </label>
       
-      <div className="space-y-2 overflow-y-auto">
+      <div className="space-y-2 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {skills.map((skill, index) => (
           <div key={index} className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3 space-y-2">
             <div className="flex items-center gap-2">

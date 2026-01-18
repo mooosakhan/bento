@@ -244,8 +244,12 @@ export default function BuilderPage() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               {/* <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Preview Mode</h1> */}
-              
+               <Button variant="secondary" onClick={() => setIsPreview(false)}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
               {/* View Mode Toggle in Preview */}
+            </div>
               <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-full p-1">
                 <button
                   onClick={() => setViewMode('mobile')}
@@ -275,11 +279,7 @@ export default function BuilderPage() {
                   <Monitor className="w-4 h-4" />
                 </button>
               </div>
-            </div>
-            <Button variant="secondary" onClick={() => setIsPreview(false)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
+           
           </div>
         </div>
         <div className="p-8">
@@ -423,7 +423,7 @@ export default function BuilderPage() {
         <div className="flex-1 flex overflow-hidden">
           {/* Left Sidebar - Block Library */}
           <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700 overflow-hidden transition-all duration-300`}>
-            <div className="h-full overflow-y-auto">
+            <div className="h-full overflow-y-auto scrollbar-light scrollbar-dark ">
               <div className="sticky top-0 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 z-10">
                 <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Blocks</h2>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">Drag or click to add</p>
@@ -445,7 +445,7 @@ export default function BuilderPage() {
           </main>
 
           {/* Right Sidebar - Inspector */}
-          <aside className="w-80 bg-neutral-50 dark:bg-neutral-850 border-l border-neutral-200 dark:border-neutral-700 overflow-y-auto">
+          <aside className="w-80 bg-neutral-50 dark:bg-neutral-850 border-l border-neutral-200 dark:border-neutral-700 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
             <Inspector
               selectedBlock={selectedBlock}
               onUpdateBlock={updateBlock}

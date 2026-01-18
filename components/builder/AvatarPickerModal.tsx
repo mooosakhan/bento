@@ -73,7 +73,7 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[60vh]">
+        <div className="p-6 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark max-h-[60vh]">
           {activeTab === 'preset' && (
             <AvatarGrid
               currentAvatar={currentAvatar}
