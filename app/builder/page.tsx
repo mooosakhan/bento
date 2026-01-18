@@ -19,6 +19,7 @@ import { Canvas } from '@/components/builder/Canvas';
 import { Inspector } from '@/components/builder/Inspector';
 import { PublishModal } from '@/components/builder/PublishModal';
 import { TemplatePickerModal } from '@/components/builder/TemplatePickerModal';
+import { BuilderHeader } from '@/components/builder/BuilderHeader';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { 
@@ -300,124 +301,20 @@ export default function BuilderPage() {
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="h-screen flex flex-col bg-neutral-50 dark:bg-neutral-900">
-        {/* Top Bar */}
-        <header className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <button 
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden text-neutral-900 dark:text-white"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
-              <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">BentoBuilder</h1>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* View Mode Toggle */}
-              <div className="hidden md:flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-full p-1">{" "}
-                <button
-                  onClick={() => setViewMode('mobile')}
-                  className={`px-3 py-1.5 rounded-full transition-colors ${
-                    viewMode === 'mobile' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
-                  }`}
-                  title="Mobile view"
-                >
-                  <Smartphone className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('tablet')}
-                  className={`px-3 py-1.5 rounded-full transition-colors ${
-                    viewMode === 'tablet' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
-                  }`}
-                  title="Tablet view"
-                >
-                  <Tablet className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('desktop')}
-                  className={`px-3 py-1.5 rounded-full transition-colors ${
-                    viewMode === 'desktop' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
-                  }`}
-                  title="Desktop view"
-                >
-                  <Monitor className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Theme Toggle */}
-              <ThemeToggle />
-
-              {/* Undo/Redo */}
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={undo}
-                  disabled={historyIndex <= 0}
-                >
-                  <Undo2 className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={redo}
-                  disabled={historyIndex >= history.length - 1}
-                >
-                  <Redo2 className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <div className="h-6 w-px bg-neutral-300 dark:bg-neutral-600" />
-
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => setShowTemplatePicker(true)}
-              >
-                <LayoutTemplate className="w-4 h-4 mr-2" />
-                Templates
-              </Button>
-
-              <Button variant="ghost" size="sm" onClick={() => setIsPreview(true)}>
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
-              </Button>
-
-              <Button 
-                variant="secondary" 
-                size="sm"
-                onClick={() => setShowPublishModal(true)}
-              >
-                Publish
-              </Button>
-
-              <a
-                href={`/u/${profile.handle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
-              >
-                /u/{profile.handle}
-              </a>
-
-              <Button variant="ghost" size="sm" onClick={resetProfile}>
-                <RotateCcw className="w-4 h-4" />
-              </Button>
-
-              {!isSaved && (
-                <span className="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
-                  <Save className="w-3 h-3" /> Saving...
-                </span>
-              )}
-              {isSaved && (
-                <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
-                  <Save className="w-3 h-3" /> Saved
-                </span>
-              )}
-            </div>
-          </div>
-        </header>
+        {/* Header */}
+        <BuilderHeader
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onTemplatesClick={() => setShowTemplatePicker(true)}
+          onPreviewClick={() => setIsPreview(true)}
+          onPublishClick={() => setShowPublishModal(true)}
+          onUndo={undo}
+          onRedo={redo}
+          canUndo={historyIndex > 0}
+          canRedo={historyIndex < history.length - 1}
+          isSaved={isSaved}
+          publicHandle={profile.handle}
+        />
 
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
