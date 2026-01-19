@@ -4,9 +4,10 @@ import { ExternalLink } from 'lucide-react';
 
 interface ProjectsBlockRendererProps {
   props: ProjectsBlockProps;
+  theme: any;
 }
 
-export function ProjectsBlockRenderer({ props }: ProjectsBlockRendererProps) {
+export function ProjectsBlockRenderer({ props , theme }: ProjectsBlockRendererProps & { theme: any }) {
   if (!props.projects || props.projects.length === 0) {
     return (
       <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">

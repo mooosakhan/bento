@@ -11,11 +11,15 @@ import {
   Redo2,
   ExternalLink,
   Sparkles,
+  MousePointer2,
+  Hand,
 } from 'lucide-react';
 
 interface BuilderHeaderProps {
   viewMode: 'mobile' | 'tablet' | 'desktop';
   onViewModeChange: (mode: 'mobile' | 'tablet' | 'desktop') => void;
+  cursorMode: 'select' | 'grab';
+  onCursorModeChange: (mode: 'select' | 'grab') => void;
   onTemplatesClick: () => void;
   onPreviewClick: () => void;
   onPublishClick: () => void;
@@ -30,6 +34,8 @@ interface BuilderHeaderProps {
 export function BuilderHeader({
   viewMode,
   onViewModeChange,
+  cursorMode,
+  onCursorModeChange,
   onTemplatesClick,
   onPreviewClick,
   onPublishClick,
@@ -59,6 +65,35 @@ export function BuilderHeader({
 
         {/* Center: View & Mode Controls */}
         <div className="flex items-center gap-4">
+          {/* Cursor Mode Toggle */}
+          <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 rounded-full p-1 shadow-sm">
+            <button
+              onClick={() => onCursorModeChange('select')}
+              className={`px-3 py-1.5 rounded-full transition-all duration-200 ${
+                cursorMode === 'select'
+                  ? 'bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+              }`}
+              title="Select mode (V)"
+            >
+              <MousePointer2 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => onCursorModeChange('grab')}
+              className={`px-3 py-1.5 rounded-full transition-all duration-200 ${
+                cursorMode === 'grab'
+                  ? 'bg-white dark:bg-neutral-700 shadow-sm text-neutral-900 dark:text-white'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+              }`}
+              title="Grab mode (H)"
+            >
+              <Hand className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
+
           {/* Device Preview Toggle */}
           <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 rounded-full p-1 shadow-sm">
             <button

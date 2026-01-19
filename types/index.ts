@@ -36,7 +36,8 @@ export type BlockType =
   | 'sectionHeader'
   | 'skills'
   | 'experience'
-  | 'projects';
+  | 'projects'
+  | 'navbar';
 
 // Block-specific prop types
 export interface HeaderBlockProps {
@@ -113,6 +114,25 @@ export interface Project {
 
 export interface ProjectsBlockProps {
   projects: Project[];
+}
+
+export interface NavbarBlockProps {
+  brandText?: string;
+  logoUrl?: string;
+  showSearch: boolean;
+  style: 'transparent' | 'blur' | 'filled';
+  showHome: boolean;
+  homeLabel: string;
+  homeHref: string;
+  showAbout: boolean;
+  aboutLabel: string;
+  aboutHref: string;
+  showWork: boolean;
+  workLabel: string;
+  workHref: string;
+  showContact: boolean;
+  contactLabel: string;
+  contactHref: string;
 }
 
 // Inspector field configuration

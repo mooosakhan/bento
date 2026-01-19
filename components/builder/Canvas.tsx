@@ -9,9 +9,10 @@ interface CanvasProps {
   selectedBlockId: string | null;
   onSelectBlock: (blockId: string | null) => void;
   viewMode: 'mobile' | 'tablet' | 'desktop';
+  cursorMode: 'select' | 'grab';
 }
 
-export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode }: CanvasProps) {
+export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, cursorMode }: CanvasProps) {
   const { setNodeRef } = useDroppable({
     id: 'canvas',
   });
@@ -21,8 +22,10 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode }: Can
     viewMode === 'tablet' ? 'max-w-3xl' : 
     'max-w-5xl';
 
+  const cursorStyle = cursorMode === 'grab' ? 'cursor-grab active:cursor-grabbing' : 'cursor-default';
+
   return (
-    <div className="h-full overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark bg-neutral-100 dark:bg-neutral-900 p-8">
+    <div className={`h-full overflow-y-auto scrollbar-light scrollbar-dark bg-neutral-100 dark:bg-neutral-900 p-8 ${cursorStyle}`}>
       <div 
         ref={setNodeRef}
         className={`mx-auto ${containerWidth} min-h-full bg-white dark:bg-neutral-800 rounded-3xl shadow-xl dark:shadow-2xl p-6 transition-all duration-300`}
@@ -44,8 +47,9 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode }: Can
                 <SortableBlockItem
                   key={block.id}
                   block={block}
-                  isSelected={block.id === selectedBlockId}
-                  onSelect={() => onSelectBlock(block.id)}
+                  isSelected={cursorMode === 'select' && block.id === selectedBlockId}
+                  onSelect={() => cursorMode === 'select' && onSelectBlock(block.id)}
+                  cursorMode={cursorMode}
                 />
               ))}
             </div>

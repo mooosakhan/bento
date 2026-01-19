@@ -10,7 +10,8 @@ import {
   SectionHeaderBlockProps,
   SkillsBlockProps,
   ExperienceBlockProps,
-  ProjectsBlockProps
+  ProjectsBlockProps,
+  NavbarBlockProps
 } from '@/types';
 
 export const blockRegistry: Record<BlockType, BlockDefinition> = {
@@ -183,6 +184,51 @@ export const blockRegistry: Record<BlockType, BlockDefinition> = {
     } as ProjectsBlockProps,
     inspectorFields: [
       { key: 'projects', label: 'Projects', type: 'projects-editor' },
+    ],
+  },
+  navbar: {
+    type: 'navbar',
+    label: 'Navbar',
+    icon: 'Menu',
+    defaultProps: {
+      brandText: '',
+      logoUrl: '',
+      showSearch: true,
+      style: 'blur',
+      showHome: true,
+      homeLabel: 'Home',
+      homeHref: '#home',
+      showAbout: true,
+      aboutLabel: 'About',
+      aboutHref: '#about',
+      showWork: true,
+      workLabel: 'Work',
+      workHref: '#work',
+      showContact: true,
+      contactLabel: 'Contact',
+      contactHref: '#contact',
+    } as NavbarBlockProps,
+    inspectorFields: [
+      { key: 'brandText', label: 'Brand Text', type: 'text', placeholder: 'Your Brand' },
+      { key: 'logoUrl', label: 'Logo URL', type: 'url', placeholder: 'https://...' },
+      { key: 'showSearch', label: 'Show Search', type: 'toggle' },
+      { key: 'style', label: 'Style', type: 'select', options: [
+        { value: 'transparent', label: 'Transparent' },
+        { value: 'blur', label: 'Blur' },
+        { value: 'filled', label: 'Filled' },
+      ]},
+      { key: 'showHome', label: 'Show Home', type: 'toggle' },
+      { key: 'homeLabel', label: 'Home Label', type: 'text', placeholder: 'Home' },
+      { key: 'homeHref', label: 'Home Link', type: 'text', placeholder: '#home' },
+      { key: 'showAbout', label: 'Show About', type: 'toggle' },
+      { key: 'aboutLabel', label: 'About Label', type: 'text', placeholder: 'About' },
+      { key: 'aboutHref', label: 'About Link', type: 'text', placeholder: '#about' },
+      { key: 'showWork', label: 'Show Work', type: 'toggle' },
+      { key: 'workLabel', label: 'Work Label', type: 'text', placeholder: 'Work' },
+      { key: 'workHref', label: 'Work Link', type: 'text', placeholder: '#work' },
+      { key: 'showContact', label: 'Show Contact', type: 'toggle' },
+      { key: 'contactLabel', label: 'Contact Label', type: 'text', placeholder: 'Contact' },
+      { key: 'contactHref', label: 'Contact Link', type: 'text', placeholder: '#contact' },
     ],
   },
 };

@@ -22,9 +22,10 @@ export function getProfile() {
   if (saved) {
     try {
       const profile = JSON.parse(saved);
-      // Migration: Add default theme mode if it doesn't exist
+      // Migration: Add theme mode from theme storage if it doesn't exist
       if (profile.theme && !profile.theme.mode) {
-        profile.theme.mode = 'light';
+        const themeMode = localStorage.getItem('bento-theme-mode');
+        profile.theme.mode = (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system') ? themeMode : 'light';
       }
       return profile;
     } catch (e) {
@@ -36,10 +37,16 @@ export function getProfile() {
 
 /**
  * Saves the profile to localStorage
+ * Also syncs theme mode to separate theme storage
  */
 export function saveProfile(profile: any) {
   if (typeof window === 'undefined') return;
   localStorage.setItem('bento-profile', JSON.stringify(profile));
+  
+  // Sync theme mode to theme storage for consistency
+  if (profile.theme && profile.theme.mode) {
+    localStorage.setItem('bento-theme-mode', profile.theme.mode);
+  }
 }
 
 /**

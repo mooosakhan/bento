@@ -4,9 +4,10 @@ import { Briefcase, Calendar } from 'lucide-react';
 
 interface ExperienceBlockRendererProps {
   props: ExperienceBlockProps;
+  theme: any;
 }
 
-export function ExperienceBlockRenderer({ props }: ExperienceBlockRendererProps) {
+export function ExperienceBlockRenderer({ props , theme }: ExperienceBlockRendererProps) {
   if (!props.items || props.items.length === 0) {
     return (
       <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">

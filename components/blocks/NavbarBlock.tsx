@@ -1,0 +1,199 @@
+import React from 'react';
+import { NavbarBlockProps } from '@/types';
+import { Menu, Search, X, Sun, Moon, Monitor } from 'lucide-react';
+import { applyThemeMode, getInitialThemeMode, ThemeMode } from '@/lib/theme';
+
+interface NavbarBlockRendererProps {
+  props: NavbarBlockProps;
+}
+
+export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [themeMode, setThemeModeState] = React.useState<ThemeMode>('light');
+
+  // Initialize theme from localStorage
+  React.useEffect(() => {
+    const initialMode = getInitialThemeMode();
+    setThemeModeState(initialMode);
+    applyThemeMode(initialMode);
+  }, []);
+
+  // Theme toggle handler
+  const toggleTheme = () => {
+    const modes: ThemeMode[] = ['light', 'dark'];
+    const currentIndex = modes.indexOf(themeMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    const newMode = modes[nextIndex];
+    
+    // Play click sound immediately (async)
+    const audio = new Audio('/assets/sounds/switch-93378.mp3');
+    audio.volume = 0.5;
+    audio.play().catch(err => console.log('Audio play failed:', err));
+    
+    // Apply theme changes slightly after sound starts
+    setTimeout(() => {
+      setThemeModeState(newMode);
+      applyThemeMode(newMode);
+    }, 50); // 50ms delay for smoother feel
+  };
+
+  const getThemeIcon = () => {
+    switch (themeMode) {
+      case 'light':
+        return <Sun className="w-5 h-5" />;
+      case 'dark':
+        return <Moon className="w-5 h-5" />;
+    }
+  };
+
+  // Keyboard shortcut for search (Ctrl+K)
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+    };
+
+    if (props.showSearch) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [props.showSearch]);
+
+  const links = [
+    { label: props.homeLabel || 'Home', href: props.homeHref || '#home', show: props.showHome },
+    { label: props.aboutLabel || 'About', href: props.aboutHref || '#about', show: props.showAbout },
+    { label: props.workLabel || 'Work', href: props.workHref || '#work', show: props.showWork },
+    { label: props.contactLabel || 'Contact', href: props.contactHref || '#contact', show: props.showContact },
+  ].filter(link => link.show !== false);
+
+  const bgClass = props.style === 'transparent' 
+    ? 'bg-transparent' 
+    : props.style === 'filled'
+    ? 'bg-white dark:bg-neutral-900 shadow-sm border-b border-neutral-200 dark:border-neutral-800'
+    : 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800';
+
+  return (
+    <nav className={`sticky top-0 z-50 ${bgClass} rounded-xl`}>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo/Brand */}
+          <div className="flex items-center justify-center gap-2 h-16 overflow-hidden">
+            {props.logoUrl && (
+              <img
+                src={props.logoUrl}
+                alt={props.brandText || 'Logo'}
+                className="h-10 w-auto self-start mt-3 bg-slate-100/20 rounded-md"
+              />
+            )}
+            {props.brandText && (
+              <span className="text-xl font-bold text-neutral-900 dark:text-white">
+                {props.brandText}
+              </span>
+            )}
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4 ml-auto">
+            {links.map((link, index) => (
+              <a
+                key={index}
+                href={link.href}
+                className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          {/* Search and Actions */}
+          <div className="flex items-center gap-2 ml-auto md:ml-4">
+            {props.showSearch && (
+              <>
+                {searchOpen ? (
+                  <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-5 duration-200">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      autoFocus
+                      className="px-2 py-1 w-36  rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') setSearchOpen(false);
+                      }}
+                    />
+                    <button
+                      onClick={() => setSearchOpen(false)}
+                      className=" rounded-md text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      aria-label="Close search"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setSearchOpen(true)}
+                    className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors"
+                    aria-label="Open search"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span className="text-sm">Search</span>
+                    <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-mono bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded">
+                      Ctrl+K
+                    </kbd>
+                  </button>
+                )}
+              </>
+            )}
+            
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              aria-label={`Switch theme (current: ${themeMode})`}
+              title={`Current: ${themeMode} mode`}
+            >
+              {getThemeIcon()}
+            </button>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-md text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            aria-label="Toggle menu"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden pb-4 border-t border-neutral-200 dark:border-neutral-700 mt-2 pt-4">
+            <div className="flex flex-col space-y-3">
+              {links.map((link, index) => (
+                <a
+                  key={index}
+                  href={link.href}
+                  className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium px-2 py-1"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
+              {/* Theme toggle in mobile menu */}
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium px-2 py-1 text-left"
+              >
+                {getThemeIcon()}
+                <span>Theme: {themeMode}</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}

@@ -6,15 +6,44 @@ import { Profile } from '@/types';
 import { getProfileByHandle } from '@/lib/profileUtils';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Sun, Moon, Monitor } from 'lucide-react';
 import Link from 'next/link';
-import { applyThemeMode, getEffectiveTheme } from '@/lib/theme';
+import { applyThemeMode, getEffectiveTheme, getInitialThemeMode, ThemeMode } from '@/lib/theme';
 
 export default function ProfilePage() {
   const params = useParams();
   const handle = params.handle as string;
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [themeMode, setThemeModeState] = useState<ThemeMode>('light');
+
+  // Initialize theme from localStorage or system preference
+  useEffect(() => {
+    const initialMode = getInitialThemeMode();
+    setThemeModeState(initialMode);
+    applyThemeMode(initialMode);
+  }, []);
+
+  // Theme toggle handler
+  const toggleTheme = () => {
+    const modes: ThemeMode[] = ['light', 'dark', 'system'];
+    const currentIndex = modes.indexOf(themeMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    const newMode = modes[nextIndex];
+    setThemeModeState(newMode);
+    applyThemeMode(newMode);
+  };
+
+  const getThemeIcon = () => {
+    switch (themeMode) {
+      case 'light':
+        return <Sun className="w-4 h-4" />;
+      case 'dark':
+        return <Moon className="w-4 h-4" />;
+      case 'system':
+        return <Monitor className="w-4 h-4" />;
+    }
+  };
 
   // Poll for updates to enable live sync
   useEffect(() => {
@@ -22,11 +51,6 @@ export default function ProfilePage() {
       const loadedProfile = getProfileByHandle(handle);
       setProfile(loadedProfile);
       setLoading(false);
-      
-      // Apply the theme mode from the profile
-      if (loadedProfile?.theme?.mode) {
-        applyThemeMode(loadedProfile.theme.mode);
-      }
     };
 
     loadProfile();
@@ -71,17 +95,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <div 
-      className="min-h-screen py-8 px-4 bg-neutral-100 dark:bg-neutral-900"
-      style={{ backgroundColor: profile.theme.background }}
-    >
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen py-8 px-4 bg-neutral-100 dark:bg-neutral-900">
+    
+
+      <div className="max-w-4xl mx-auto">
         {/* Profile Content */}
-        <div className="bg-white dark:bg-neutral-800 rounded-3xl shadow-xl p-6 mb-6">
+        <div className="rounded-3xl p-6 mb-6 bg-neutral-50 dark:bg-neutral-800 shadow-sm">
           <div className="space-y-4">
             {profile.blocks.map(block => (
               <div key={block.id}>
-                <BlockRenderer block={block} />
+                <BlockRenderer block={block} theme={profile.theme} />
               </div>
             ))}
           </div>

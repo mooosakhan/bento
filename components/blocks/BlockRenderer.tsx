@@ -10,33 +10,37 @@ import { SectionHeaderBlockRenderer } from './SectionHeaderBlock';
 import { SkillsBlockRenderer } from './SkillsBlock';
 import { ExperienceBlockRenderer } from './ExperienceBlock';
 import { ProjectsBlockRenderer } from './ProjectsBlock';
+import { NavbarBlockRenderer } from './NavbarBlock';
 
 interface BlockRendererProps {
   block: Block;
+  theme: any;
 }
 
-export function BlockRenderer({ block }: BlockRendererProps) {
+export function BlockRenderer({ block, theme }: BlockRendererProps & { theme: any }) {
   switch (block.type) {
     case 'header':
-      return <HeaderBlockRenderer props={block.props} />;
+      return <HeaderBlockRenderer  props={block.props}  />;
     case 'link':
-      return <LinkBlockRenderer props={block.props} />;
+      return <LinkBlockRenderer props={block.props}  />;
     case 'gallery':
-      return <GalleryBlockRenderer props={block.props} />;
+      return <GalleryBlockRenderer props={block.props}  />;
     case 'card':
-      return <CardBlockRenderer props={block.props} />;
+      return <CardBlockRenderer props={block.props}  />;
     case 'divider':
-      return <DividerBlockRenderer props={block.props} />;
+      return <DividerBlockRenderer props={block.props}  />;
     case 'socialRow':
-      return <SocialRowBlockRenderer props={block.props} />;
+      return <SocialRowBlockRenderer props={block.props}  />;
     case 'sectionHeader':
-      return <SectionHeaderBlockRenderer props={block.props} />;
+      return <SectionHeaderBlockRenderer props={block.props}  />;
     case 'skills':
-      return <SkillsBlockRenderer props={block.props} />;
+      return <SkillsBlockRenderer props={block.props} theme={theme} />;
     case 'experience':
-      return <ExperienceBlockRenderer props={block.props} />;
+      return <ExperienceBlockRenderer props={block.props} theme={theme} />;
     case 'projects':
-      return <ProjectsBlockRenderer props={block.props} />;
+      return <ProjectsBlockRenderer props={block.props} theme={theme} />;
+    case 'navbar':
+      return <NavbarBlockRenderer props={block.props} />;
     default:
       return <div>Unknown block type</div>;
   }

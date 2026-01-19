@@ -39,16 +39,29 @@ import {
   Backpack,
   ArrowLeft
 } from 'lucide-react';
+import { BlockRenderer } from '@/components/blocks/BlockRenderer';
+
 
 export default function BuilderPage() {
+  // Get initial theme mode from localStorage
+  const getInitialThemeMode = (): 'light' | 'dark' | 'system' => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('bento-theme-mode');
+      if (stored === 'light' || stored === 'dark' || stored === 'system') {
+        return stored;
+      }
+    }
+    return 'light';
+  };
+
   const [profile, setProfile] = useState<Profile>({
     handle: 'myprofile',
     displayName: 'Your Name',
     bio: 'Your bio',
     avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=default',
     theme: {
-      mode: 'light',
-      background: '#f7f7f7',
+      mode: getInitialThemeMode(),
+      background: '', // Use Tailwind classes instead
       cardStyle: 'default',
       accentColor: '#000000',
       fontScale: 1,
@@ -61,10 +74,11 @@ export default function BuilderPage() {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isSaved, setIsSaved] = useState(true);
   const [isPreview, setIsPreview] = useState(false);
-  const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('mobile');
+  const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showPublishModal, setShowPublishModal] = useState(false);
+  const [cursorMode, setCursorMode] = useState<'select' | 'grab'>('select');
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
 
   const sensors = useSensors(
@@ -77,12 +91,84 @@ export default function BuilderPage() {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const profile = getProfile();
-    if (profile) {
-      setProfile(profile);
-      addToHistory(profile.blocks);
+    const loadedProfile = getProfile();
+    if (loadedProfile) {
+      // Make sure theme mode is in sync with localStorage
+      const themeMode = localStorage.getItem('bento-theme-mode');
+      if (themeMode && (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system')) {
+        loadedProfile.theme.mode = themeMode;
+      }
+      setProfile(loadedProfile);
+      addToHistory(loadedProfile.blocks);
     }
   }, []);
+
+  // Sync profile theme with localStorage theme when it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const themeMode = localStorage.getItem('bento-theme-mode');
+      if (themeMode && (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system')) {
+        if (profile.theme.mode !== themeMode) {
+          setProfile(prev => ({
+            ...prev,
+            theme: {
+              ...prev.theme,
+              mode: themeMode as 'light' | 'dark' | 'system',
+            },
+          }));
+        }
+      }
+    }
+  }, []);
+
+  // Listen for storage events to sync theme across tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'bento-theme-mode' && e.newValue) {
+        const newMode = e.newValue;
+        if (newMode === 'light' || newMode === 'dark' || newMode === 'system') {
+          setProfile(prev => ({
+            ...prev,
+            theme: {
+              ...prev.theme,
+              mode: newMode,
+            },
+          }));
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Keyboard shortcut for cursor mode (V for select, H for grab)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+      
+      if (e.key === 'v' || e.key === 'V') {
+        setCursorMode('select');
+      } else if (e.key === 'h' || e.key === 'H') {
+        setCursorMode('grab');
+        setSelectedBlockId(null); // Deselect when switching to grab mode
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Handle cursor mode change
+  const handleCursorModeChange = (mode: 'select' | 'grab') => {
+    setCursorMode(mode);
+    if (mode === 'grab') {
+      setSelectedBlockId(null); // Deselect all when switching to grab mode
+    }
+  };
 
   // Auto-save to localStorage (debounced) + Auto-generate handle
   useEffect(() => {
@@ -249,7 +335,8 @@ export default function BuilderPage() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-              {/* View Mode Toggle in Preview */}
+              {/* Theme Toggle in Preview */}
+              <ThemeToggle />
             </div>
               <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-full p-1">
                 <button
@@ -283,12 +370,12 @@ export default function BuilderPage() {
            
           </div>
         </div>
-        <div className="p-8">
-          <div className={`${previewContainerWidth} mx-auto bg-white dark:bg-neutral-800 rounded-3xl shadow-xl dark:shadow-2xl p-6 transition-all duration-300`}>
+        <div className="p-8 bg-neutral-100 dark:bg-neutral-900">
+          <div className={`${previewContainerWidth} mx-auto bg-white dark:bg-neutral-800 rounded-3xl p-6 transition-all duration-300 shadow-sm`}>
             <div className="space-y-4">
               {profile.blocks.map(block => (
                 <div key={block.id}>
-                  <BlockRenderer block={block} />
+                  <BlockRenderer block={block} theme={profile.theme} />
                 </div>
               ))}
             </div>
@@ -305,6 +392,8 @@ export default function BuilderPage() {
         <BuilderHeader
           viewMode={viewMode}
           onViewModeChange={setViewMode}
+          cursorMode={cursorMode}
+          onCursorModeChange={handleCursorModeChange}
           onTemplatesClick={() => setShowTemplatePicker(true)}
           onPreviewClick={() => setIsPreview(true)}
           onPublishClick={() => setShowPublishModal(true)}
@@ -336,8 +425,9 @@ export default function BuilderPage() {
             <Canvas
               blocks={profile.blocks}
               selectedBlockId={selectedBlockId}
-              onSelectBlock={setSelectedBlockId}
+              onSelectBlock={(id) => cursorMode === 'select' ? setSelectedBlockId(id) : null}
               viewMode={viewMode}
+              cursorMode={cursorMode}
             />
           </main>
 
@@ -378,6 +468,3 @@ export default function BuilderPage() {
     </DndContext>
   );
 }
-
-// Import BlockRenderer
-import { BlockRenderer } from '@/components/blocks/BlockRenderer';

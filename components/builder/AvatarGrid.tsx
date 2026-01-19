@@ -6,7 +6,7 @@ interface AvatarGridProps {
     onSelect: (avatarPath: string) => void;
 }
 
-type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others';
+type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others' | 'ramx';
 
 // Preset avatars - using DiceBear API for now as placeholders
 // In production, these would be from /public/avatars/{category}/
@@ -38,10 +38,15 @@ const AVATAR_PRESETS = {
             alt: `Open Peeps Avatar ${i + 1}`,
         })),
     ],
+    ramx: Array.from({ length: 1 }, (_, i) => ({
+        id: `ramx-${i + 1}`,
+        url: `/assets/ram.webp`,
+        alt: `Ramx Avatar ${i + 1}`,
+    })),
 };
 
 export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
-    const [selectedCategory, setSelectedCategory] = useState<CategoryType>('lorelei');
+    const [selectedCategory, setSelectedCategory] = useState<CategoryType>('ramx');
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
     const avatars = AVATAR_PRESETS[selectedCategory];
@@ -91,6 +96,15 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                         }`}
                 >
                     Others
+                </button>
+                  <button
+                    onClick={() => setSelectedCategory('ramx')}
+                    className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'ramx'
+                        ? 'bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                        }`}
+                >
+                    Ramx
                 </button>
             </div>
 
@@ -149,6 +163,11 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                     {selectedCategory === 'others' && (
                         <>
                             <strong>Others:</strong> Croodles & Open Peeps - Fun, hand-drawn and diverse avatar styles
+                        </>
+                    )}
+                    {selectedCategory === 'ramx' && (
+                        <>
+                            <strong>Ramx Style:</strong> A unique avatar representing Ramx
                         </>
                     )}
                 </p>

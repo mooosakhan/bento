@@ -3,9 +3,10 @@ import { SkillsBlockProps } from '@/types';
 
 interface SkillsBlockRendererProps {
   props: SkillsBlockProps;
+  theme: any;
 }
 
-export function SkillsBlockRenderer({ props }: SkillsBlockRendererProps) {
+export function SkillsBlockRenderer({ props, theme }: SkillsBlockRendererProps & { theme: any }) {
   if (!props.skills || props.skills.length === 0) {
     return (
       <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">
@@ -29,12 +30,15 @@ export function SkillsBlockRenderer({ props }: SkillsBlockRendererProps) {
 
   if (props.layout === 'chips') {
     return (
-      <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm"
+        // style={{ backgroundColor: theme?.background }}
+        >
         <div className="flex flex-wrap gap-2">
           {props.skills.map((skill, index) => (
             <div
               key={index}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border ${getLevelColor(skill.level)}`}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border  ${getLevelColor(skill.level)}`}
+
             >
               <span className="font-medium">{skill.name}</span>
               {skill.level && (
