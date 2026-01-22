@@ -10,9 +10,10 @@ interface CanvasProps {
   onSelectBlock: (blockId: string | null) => void;
   viewMode: 'mobile' | 'tablet' | 'desktop';
   cursorMode: 'select' | 'grab';
+  sectionGap?: number;
 }
 
-export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, cursorMode }: CanvasProps) {
+export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, cursorMode, sectionGap = 16 }: CanvasProps) {
   const { setNodeRef } = useDroppable({
     id: 'canvas',
   });
@@ -25,10 +26,10 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, curso
   const cursorStyle = cursorMode === 'grab' ? 'cursor-grab active:cursor-grabbing' : 'cursor-default';
 
   return (
-    <div className={`h-full overflow-y-auto scrollbar-light scrollbar-dark bg-neutral-100 dark:bg-neutral-900 p-8 ${cursorStyle}`}>
+    <div className={`h-full overflow-y-auto scrollbar-light scrollbar-dark bg-neutral-100 dark:bg-black p-3 ${cursorStyle}`}>
       <div 
         ref={setNodeRef}
-        className={`mx-auto ${containerWidth} min-h-full bg-white dark:bg-neutral-800 rounded-3xl shadow-xl dark:shadow-2xl p-6 transition-all duration-300`}
+        className={`mx-auto ${containerWidth} min-h-full bg-neutral-100 dark:bg-black rounded-3xl  p-6 transition-all duration-300`}
       >
         {blocks.length === 0 ? (
           <div className="flex items-center justify-center h-64 border-2 border-dashed border-neutral-300 dark:border-neutral-600 rounded-2xl">
@@ -42,15 +43,21 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, curso
             items={blocks.map(b => b.id)} 
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-4">
-              {blocks.map((block) => (
-                <SortableBlockItem
+            <div>
+              {blocks.map((block, index) => (
+                <div 
                   key={block.id}
-                  block={block}
-                  isSelected={cursorMode === 'select' && block.id === selectedBlockId}
-                  onSelect={() => cursorMode === 'select' && onSelectBlock(block.id)}
-                  cursorMode={cursorMode}
-                />
+                  style={{ 
+                    marginTop: index === 0 ? 0 : `${block.gapBefore ?? sectionGap}px` 
+                  }}
+                >
+                  <SortableBlockItem
+                    block={block}
+                    isSelected={cursorMode === 'select' && block.id === selectedBlockId}
+                    onSelect={() => cursorMode === 'select' && onSelectBlock(block.id)}
+                    cursorMode={cursorMode}
+                  />
+                </div>
               ))}
             </div>
           </SortableContext>

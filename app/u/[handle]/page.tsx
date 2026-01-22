@@ -95,12 +95,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-neutral-100 dark:bg-neutral-900">
+    <div className="min-h-screen py-8 px-4 bg-neutral-100 dark:bg-[#0b0a0b]">
     
 
       <div className="max-w-4xl mx-auto">
         {/* Profile Content */}
-        <div className="rounded-3xl p-6 mb-6 bg-neutral-50 dark:bg-neutral-800 shadow-sm">
+        <div className="rounded-3xl p-6 mb-6 bg-neutral-100 dark:bg-[#0b0a0b] ">
           <div className="space-y-4">
             {profile.blocks.map(block => (
               <div key={block.id}>

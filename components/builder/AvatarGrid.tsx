@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 
 interface AvatarGridProps {
@@ -7,6 +7,8 @@ interface AvatarGridProps {
 }
 
 type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others' | 'ramx';
+
+const AVATAR_CATEGORY_KEY = 'avatar-selected-category';
 
 // Preset avatars - using DiceBear API for now as placeholders
 // In production, these would be from /public/avatars/{category}/
@@ -46,8 +48,24 @@ const AVATAR_PRESETS = {
 };
 
 export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
-    const [selectedCategory, setSelectedCategory] = useState<CategoryType>('ramx');
+    // Load saved category from localStorage on mount
+    const [selectedCategory, setSelectedCategory] = useState<CategoryType>(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem(AVATAR_CATEGORY_KEY);
+            if (saved && (saved === 'bento' || saved === 'lorelei' || saved === 'notionists' || saved === 'others' || saved === 'ramx')) {
+                return saved as CategoryType;
+            }
+        }
+        return 'ramx';
+    });
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+
+    // Save category to localStorage whenever it changes
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(AVATAR_CATEGORY_KEY, selectedCategory);
+        }
+    }, [selectedCategory]);
 
     const avatars = AVATAR_PRESETS[selectedCategory];
 

@@ -138,7 +138,7 @@ export function AvatarUpload({ onUpload }: AvatarUploadProps) {
               Browse Files
             </Button>
             <p className="text-xs text-neutral-400">
-              JPG, PNG, or WebP • Max 2MB
+              JPG, PNG, WebP or GIF • Max 2MB
             </p>
           </div>
         )}

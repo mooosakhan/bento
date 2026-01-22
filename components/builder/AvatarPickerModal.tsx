@@ -107,7 +107,7 @@ export function AvatarPickerModal({ currentAvatar, onSelect, onClose }: AvatarPi
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900">
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            {activeTab === 'upload' && 'Max 2MB • JPG, PNG, WebP'}
+            {activeTab === 'upload' && 'Max 2MB • JPG, PNG, WebP, GIF'}
             {activeTab === 'url' && 'Paste any image URL'}
             {activeTab === 'preset' && 'Choose from our curated collection'}
           </p>

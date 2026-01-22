@@ -66,4 +66,13 @@
   .dark .scrollbar-dark::-webkit-scrollbar-thumb:hover {
     background: #71717a;
   }
+
+  /* Chip inner shadow for light and dark themes */
+  .chip-inner-shadow {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08), inset 0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .chip-inner-shadow {
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.06), inset 0 1px 4px rgba(255, 255, 255, 0.03);
+  }
 }

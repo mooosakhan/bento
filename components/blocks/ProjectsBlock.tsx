@@ -10,7 +10,7 @@ interface ProjectsBlockRendererProps {
 export function ProjectsBlockRenderer({ props , theme }: ProjectsBlockRendererProps & { theme: any }) {
   if (!props.projects || props.projects.length === 0) {
     return (
-      <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">
+      <div className="bg-white dark:bg-[#161617] rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">
         No projects added yet
       </div>
     );
@@ -21,10 +21,10 @@ export function ProjectsBlockRenderer({ props , theme }: ProjectsBlockRendererPr
       {props.projects.map((project, index) => (
         <div 
           key={index}
-          className="bg-white dark:bg-neutral-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
+          className="bg-white dark:bg-[#161617] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
         >
           {project.image && (
-            <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-700 overflow-hidden">
+            <div className="aspect-video w-full bg-neutral-100 dark:bg-[#262626] overflow-hidden">
               <img 
                 src={project.image} 
                 alt={project.title}
@@ -46,7 +46,7 @@ export function ProjectsBlockRenderer({ props , theme }: ProjectsBlockRendererPr
                 {project.techStack.map((tech, techIndex) => (
                   <span 
                     key={techIndex}
-                    className="px-3 py-1 text-xs font-medium bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-full"
+                    className="px-3 py-1 text-xs font-medium bg-neutral-100 dark:bg-[#262626] dark:text-neutral-300 rounded-full"
                   >
                     {tech}
                   </span>

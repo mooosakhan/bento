@@ -82,11 +82,23 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
           {/* Logo/Brand */}
           <div className="flex items-center justify-center gap-2 h-16 overflow-hidden">
             {props.logoUrl && (
-              <img
-                src={props.logoUrl}
-                alt={props.brandText || 'Logo'}
-                className="h-10 w-auto self-start mt-3 bg-slate-100/20 rounded-md"
-              />
+              <div
+                className="overflow-hidden shadow-sm"
+                style={{
+                  width: `${props.logoSize || 40}px`,
+                  height: `${props.logoSize || 40}px`,
+                  borderRadius: `${props.logoRoundness !== undefined ? props.logoRoundness : 8}%`,
+                  backgroundColor: props.logoBgColor || 'transparent',
+                  marginTop: '12px',
+                  flexShrink: 0
+                }}
+              >
+                <img
+                  src={props.logoUrl}
+                  alt={props.brandText || 'Logo'}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
             )}
             {props.brandText && (
               <span className="text-xl font-bold text-neutral-900 dark:text-white">

@@ -5,6 +5,7 @@ export interface Profile {
   avatarUrl: string;
   theme: Theme;
   blocks: Block[];
+  sectionGap?: number; // Gap between sections in pixels (default 16)
   portfolioMeta?: {
     title?: string;
     tagline?: string;
@@ -24,6 +25,7 @@ export interface Block {
   type: BlockType;
   props: any;
   order: number;
+  gapBefore?: number; // Gap before this block in pixels
 }
 
 export type BlockType = 
@@ -45,6 +47,16 @@ export interface HeaderBlockProps {
   bio: string;
   avatarUrl: string;
   location?: string;
+  chipLogos?: { [chipName: string]: string }; // Map of chip name to logo URL
+  avatarBgColor?: string; // Background color for avatar
+  avatarRoundness?: number; // Roundness 0-100 (0 = square, 100 = circle)
+  avatarSize?: number; // Avatar size in pixels (default 96)
+  contentAlignment?: 'left' | 'center' | 'right'; // Text alignment
+  avatarToContentGap?: number; // Gap between avatar and content (default 28)
+  contentItemsGap?: number; // Gap between content items (default 20)
+  nameFontSize?: number; // Name font size (default 36)
+  bioFontSize?: number; // Bio font size (default 18)
+  bioLineHeight?: number; // Bio line height (default 1.56)
 }
 
 export interface LinkBlockProps {
@@ -98,6 +110,12 @@ export interface ExperienceItem {
   startDate: string;
   endDate?: string;
   description: string;
+  companyLogo?: string; // URL or SVG string for company logo
+  logoBgColor?: string; // Background color for logo
+  logoRoundness?: number; // Roundness 0-100 (0 = square, 100 = circle)
+  blurCompanyTitle?: boolean; // Whether to blur the company name
+  chips?: string[]; // Array of chip names (e.g., ['JavaScript', 'React', 'Node.js'])
+  chipLogos?: { [chipName: string]: string }; // Map of chip name to logo URL
 }
 
 export interface ExperienceBlockProps {
@@ -133,6 +151,9 @@ export interface NavbarBlockProps {
   showContact: boolean;
   contactLabel: string;
   contactHref: string;
+  logoBgColor?: string; // Background color for logo
+  logoRoundness?: number; // Roundness 0-100 (0 = square, 100 = circle)
+  logoSize?: number; // Logo size in pixels (default 40)
 }
 
 // Inspector field configuration

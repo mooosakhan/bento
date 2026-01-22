@@ -20,6 +20,7 @@ import { Inspector } from '@/components/builder/Inspector';
 import { PublishModal } from '@/components/builder/PublishModal';
 import { TemplatePickerModal } from '@/components/builder/TemplatePickerModal';
 import { BuilderHeader } from '@/components/builder/BuilderHeader';
+import { PageStructurePanel } from '@/components/builder/PageStructurePanel';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/Button';
 import { 
@@ -67,6 +68,7 @@ export default function BuilderPage() {
       fontScale: 1,
     },
     blocks: [],
+    sectionGap: 16, // Default gap between sections in pixels
   });
 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -170,6 +172,20 @@ export default function BuilderPage() {
     }
   };
 
+  // Listen for block selection from PageStructurePanel
+  useEffect(() => {
+    const handleSelectBlock = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        setSelectedBlockId(customEvent.detail);
+        setCursorMode('select');
+      }
+    };
+
+    window.addEventListener('selectBlock', handleSelectBlock);
+    return () => window.removeEventListener('selectBlock', handleSelectBlock);
+  }, []);
+
   // Auto-save to localStorage (debounced) + Auto-generate handle
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -241,6 +257,13 @@ export default function BuilderPage() {
   const updateBlock = (blockId: string, props: any) => {
     const newBlocks = profile.blocks.map(block =>
       block.id === blockId ? { ...block, props } : block
+    );
+    setProfile(prev => ({ ...prev, blocks: newBlocks }));
+  };
+
+  const updateBlockMeta = (blockId: string, updates: Partial<Block>) => {
+    const newBlocks = profile.blocks.map(block =>
+      block.id === blockId ? { ...block, ...updates } : block
     );
     setProfile(prev => ({ ...prev, blocks: newBlocks }));
   };
@@ -326,8 +349,8 @@ export default function BuilderPage() {
 
   if (isPreview) {
     return (
-      <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900">
-        <div className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4">
+      <div className="min-h-screen bg-neutral-100 dark:bg-black">
+        <div className="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               {/* <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Preview Mode</h1> */}
@@ -370,8 +393,8 @@ export default function BuilderPage() {
            
           </div>
         </div>
-        <div className="p-8 bg-neutral-100 dark:bg-neutral-900">
-          <div className={`${previewContainerWidth} mx-auto bg-white dark:bg-neutral-800 rounded-3xl p-6 transition-all duration-300 shadow-sm`}>
+        <div className="p-8 bg-neutral-100 dark:bg-black">
+          <div className={`${previewContainerWidth} mx-auto bg-neutral-100 dark:bg-black rounded-3xl p-6 transition-all duration-300 shadow-sm`}>
             <div className="space-y-4">
               {profile.blocks.map(block => (
                 <div key={block.id}>
@@ -387,7 +410,7 @@ export default function BuilderPage() {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="h-screen flex flex-col bg-neutral-50 dark:bg-neutral-900">
+      <div className="h-screen flex flex-col bg-neutral-50 dark:bg-black">
         {/* Header */}
         <BuilderHeader
           viewMode={viewMode}
@@ -408,9 +431,9 @@ export default function BuilderPage() {
         {/* Main Content */}
         <div className="flex-1 flex overflow-hidden">
           {/* Left Sidebar - Block Library */}
-          <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700 overflow-hidden transition-all duration-300`}>
+          <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 overflow-hidden transition-all duration-300`}>
             <div className="h-full overflow-y-auto scrollbar-light scrollbar-dark ">
-              <div className="sticky top-0 bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 z-10">
+              <div className="sticky top-0 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 z-10">
                 <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Blocks</h2>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">Drag or click to add</p>
               </div>
@@ -428,6 +451,7 @@ export default function BuilderPage() {
               onSelectBlock={(id) => cursorMode === 'select' ? setSelectedBlockId(id) : null}
               viewMode={viewMode}
               cursorMode={cursorMode}
+              sectionGap={profile.sectionGap}
             />
           </main>
 
@@ -438,6 +462,10 @@ export default function BuilderPage() {
               onUpdateBlock={updateBlock}
               onDeleteBlock={deleteBlock}
               onDuplicateBlock={duplicateBlock}
+              onDeselectBlock={() => setSelectedBlockId(null)}
+              onUpdateBlockMeta={updateBlockMeta}
+              profile={profile}
+              onUpdateProfile={setProfile}
             />
           </aside>
         </div>

@@ -124,12 +124,6 @@ export function AvatarUrlInput({ currentUrl, onSubmit }: AvatarUrlInputProps) {
         </div>
       )}
 
-      {/* Helper Text */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <p className="text-sm text-blue-900">
-          <strong>💡 Tip:</strong> You can use images from Unsplash, Imgur, or any publicly accessible URL.
-        </p>
-      </div>
     </div>
   );
 }
