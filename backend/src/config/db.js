@@ -1,35 +1,31 @@
 import mongoose from "mongoose";
 
-const defaultOpts = {
-  autoIndex: true,
-  // Fail fast if host unreachable
-  serverSelectionTimeoutMS: 5000,
-  // recommended
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-};
+const MONGODB_URI = process.env.MONGODB_URI;
 
-let cached = global.__mongoose;
+if (!MONGODB_URI) {
+  throw new Error("Missing MONGODB_URI in environment variables");
+}
 
-export async function connectDB(uri) {
-  if (!uri) throw new Error("MONGODB_URI is missing");
+// @ts-ignore
+let cached = global.mongooseCache;
 
-  if (cached && cached.conn) {
-    return cached.conn;
-  }
+if (!cached) {
+  // @ts-ignore
+  cached = global.mongooseCache = { conn: null, promise: null };
+}
 
-  if (!cached) {
-    cached = global.__mongoose = { conn: null, promise: null };
-  }
+export default async function dbConnect() {
+  if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    mongoose.set("strictQuery", true);
-    cached.promise = mongoose.connect(uri, defaultOpts).then((mongooseInstance) => {
-      return mongooseInstance.connection;
-    });
+    cached.promise = mongoose
+      .connect(MONGODB_URI, {
+        bufferCommands: false, // IMPORTANT: fail fast if not connected
+        serverSelectionTimeoutMS: 10000,
+      })
+      .then((m) => m);
   }
 
   cached.conn = await cached.promise;
-  console.log("✅ MongoDB connected");
   return cached.conn;
 }
