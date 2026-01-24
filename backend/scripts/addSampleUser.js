@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
-import { connectDB } from '../src/config/db.js';
 import User from '../src/models/User.model.js';
 import Profile from '../src/models/Profile.model.js';
+import dbConnect from '../src/config/db.js';
 
 const [,, email, password, handleArg] = process.argv;
 
@@ -23,7 +23,7 @@ async function main() {
     const uri = process.env.MONGODB_URI;
     if (!uri) throw new Error('MONGODB_URI not set in environment');
 
-    await connectDB(uri);
+    await dbConnect();
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
