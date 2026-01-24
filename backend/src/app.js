@@ -14,7 +14,13 @@ app.use(cors("*"));
 app.use(express.json({ limit: "2mb" })); // adjust if you store base64 avatars
 app.use(morgan("dev"));
 
-app.get("/health", (req, res) => res.json({ ok: true }));
+app.get("/", (req, res) =>
+  res.json({
+    message: "Server is running successfully",
+    status: "OK",
+    timestamp: new Date().toISOString(),
+  }),
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api", profileRoutes); // includes /profiles and /u/:handle
