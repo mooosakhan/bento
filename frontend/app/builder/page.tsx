@@ -554,12 +554,3 @@ export default function BuilderPage() {
     </DndContext>
   );
 }
-
-const SectionSVG = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <title>Sections</title>
-    <path d="M4 6C4 4.895 4.895 4 6 4H14C15.105 4 16 4.895 16 6V7C16 7.552 15.552 8 15 8H5C4.448 8 4 7.552 4 7V6Z" fill="white"></path>
-    <path opacity="0.4" d="M4 14C4 15.105 4.895 16 6 16H14C15.105 16 16 15.105 16 14V10C16 9.448 15.552 9 15 9H5C4.448 9 4 9.448 4 10V14Z" fill="white"></path>
-  </svg>
-);
-export { SectionSVG };
