@@ -156,6 +156,10 @@ export async function register(req, res) {
     slugifyHandle(name) || slugifyHandle(email.split("@")[0]) || "user";
   const handle = await ensureUniqueHandle(baseHandle);
 
+
+  console.log("handle", handle);
+  
+
   await Profile.create(
     defaultProfileDoc({
       ownerId: user._id,

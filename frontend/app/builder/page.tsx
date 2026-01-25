@@ -21,7 +21,7 @@ import { PublishModal } from '@/components/builder/PublishModal';
 import { TemplatePickerModal } from '@/components/builder/TemplatePickerModal';
 import { BuilderHeader } from '@/components/builder/BuilderHeader';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import {
   Smartphone,
   Tablet,
@@ -41,9 +41,6 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
-
-// ✅ backend sync
-import { isLoggedIn } from "@/lib/auth";
 import { getMyProfile,updateMyProfile } from '@/api/profile';
 
 const TABS = [
@@ -154,11 +151,7 @@ export default function BuilderPage() {
         // }
       } catch {
         // fallback to local
-        const local = getProfile();
-        if (local && alive) {
-          setProfile(local);
-          addToHistory(local.blocks);
-        }
+
         setCloudStatus("error");
       }
     }
@@ -240,26 +233,24 @@ export default function BuilderPage() {
     const timer = setTimeout(async () => {
       // generate handle from header name
       const headerBlock = profile.blocks.find(b => b.type === 'header');
-      const displayName = headerBlock?.props?.displayName || 'Your Name';
-      const generatedHandle = generateHandle(displayName);
+      // const generatedHandle = generateHandle(displayName);
 
       const updatedProfile: Profile = {
         ...profile,
-        handle: generatedHandle,
-        displayName,
+        // displayName,
       };
 
       // ✅ save local
       saveProfile(updatedProfile);
 
       // ✅ avoid infinite loop: only setProfile if needed
-      const needsSet =
-        updatedProfile.handle !== profile.handle ||
-        updatedProfile.displayName !== profile.displayName;
+      // const needsSet =
+      //   updatedProfile.handle !== profile.handle ||
+      //   updatedProfile.displayName !== profile.displayName;
 
-      if (needsSet) {
-        setProfile(updatedProfile);
-      }
+      // if (needsSet) {
+      //   setProfile(updatedProfile);
+      // }
 
       // ✅ save cloud if logged in
       if (true) {

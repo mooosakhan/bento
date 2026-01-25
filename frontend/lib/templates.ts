@@ -28,65 +28,89 @@ export const templates: Template[] = [
     description: 'Perfect for software engineers and developers',
     icon: 'Code',
     blocks: [
+      // Navbar to give the template a professional header/navigation
+      createBlock('navbar', {
+        brandText: 'YourName',
+        logoUrl: '',
+        showSearch: false,
+        style: 'blur',
+        showHome: true,
+        homeLabel: 'Home',
+        homeHref: '#home',
+        logoBgColor: 'transparent',
+        logoRoundness: 6,
+        logoSize: 40,
+      }, 0),
+
+      // Hero header centered, larger fonts and a short tech-focused bio
       createBlock('header', {
         displayName: 'Your Name',
-        bio: 'Full Stack Developer passionate about building elegant solutions',
-        avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=developer',
+        bio: 'Full‑Stack Developer building scalable web apps with delightful UX',
+        avatarUrl: 'https://api.dicebear.com/9.x/lorelei/svg',
         location: 'San Francisco, CA',
-      }, 0),
+        contentAlignment: 'center',
+        nameFontSize: 44,
+        bioFontSize: 18,
+        avatarSize: 120,
+        avatarRoundness: 999,
+      }, 1),
+
+      // Hero card with CTA to showcase personality and a live link
+      createBlock('card', {
+        title: 'Hi — I\'m a Developer',
+        description: 'I craft reliable, maintainable code and beautiful products. Currently building developer tools and internal platforms.',
+        imageUrl: '',
+        ctaText: 'View Work',
+        ctaUrl: '#work',
+      }, 2),
+
       createBlock('sectionHeader', {
         title: 'Skills',
         subtitle: 'Technologies I work with',
-      }, 1),
+      }, 3),
+
+      // Use grid layout for skills to feel more technical and structured
       createBlock('skills', {
         skills: [
           { name: 'JavaScript', level: 'Advanced' },
           { name: 'TypeScript', level: 'Advanced' },
           { name: 'React', level: 'Advanced' },
+          { name: 'Next.js', level: 'Advanced' },
           { name: 'Node.js', level: 'Intermediate' },
-          { name: 'Python', level: 'Intermediate' },
+          { name: 'Docker', level: 'Intermediate' },
           { name: 'SQL', level: 'Intermediate' },
+          { name: 'AWS', level: 'Intermediate' },
         ],
-        layout: 'chips',
-      }, 2),
-      createBlock('sectionHeader', {
-        title: 'Experience',
-        subtitle: 'Where I\'ve worked',
-      }, 3),
-      createBlock('experience', {
-        items: [
-          {
-            role: 'Senior Software Engineer',
-            company: 'Tech Company',
-            startDate: 'Jan 2023',
-            endDate: '',
-            description: 'Leading development of scalable web applications using React, TypeScript, and Node.js.',
-          },
-          {
-            role: 'Software Engineer',
-            company: 'Startup Inc',
-            startDate: 'Jun 2021',
-            endDate: 'Dec 2022',
-            description: 'Built and maintained full-stack features for a SaaS platform.',
-          },
-        ],
+        layout: 'grid',
       }, 4),
+
       createBlock('sectionHeader', {
-        title: 'Projects',
-        subtitle: 'Things I\'ve built',
+        title: 'Featured Projects',
+        subtitle: 'Selected work that shows my approach',
       }, 5),
+
       createBlock('projects', {
         projects: [
           {
             title: 'Portfolio Builder',
-            description: 'A modern tool for creating beautiful portfolio websites with no code.',
+            description: 'A modern tool for creating beautiful portfolio websites with no code — built with React and Tailwind.',
             image: '',
             techStack: ['React', 'TypeScript', 'Tailwind CSS'],
             link: 'https://example.com',
           },
+          {
+            title: 'Realtime Analytics',
+            description: 'A dashboard surface for realtime metrics and alerts used by ops teams.',
+            image: '',
+            techStack: ['Node.js', 'WebSockets', 'Postgres'],
+            link: '',
+          },
         ],
       }, 6),
+
       createBlock('divider', { style: 'solid' }, 7),
+
+      // Socials and contact
       createBlock('socialRow', {
         github: 'yourusername',
         linkedin: 'yourusername',

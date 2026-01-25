@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { setAuthToken } from "@/lib/auth";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { setCookie } from "cookies-next";
 import { Login } from "@/api/auth/login/route";
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
           <button
             type="button"
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/signup")}
             className="w-full text-sm text-neutral-700 dark:text-neutral-300 hover:underline"
           >
             Create an account

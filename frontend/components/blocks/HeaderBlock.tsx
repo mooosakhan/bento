@@ -8,7 +8,7 @@ interface HeaderBlockRendererProps {
 
 // Parse bio text for markdown and chips - now including chips inline
 function parseBioText(text: string, chipLogos: { [key: string]: string } = {}) {
-  const elements: JSX.Element[] = [];
+  const elements: React.ReactNode[] = [];
   let currentIndex = 0;
   
   // Regex patterns

@@ -4,7 +4,8 @@ import { getBlockDefinition } from '@/lib/blockRegistry';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
-import { Button } from '@/components/ui/Button';
+import { Toggle } from '@/components/ui/Toggle';
+
 import { Trash2, Copy, Image as ImageIcon, Pencil, Backpack, MoveLeftIcon, ArrowLeftFromLine, X } from 'lucide-react';
 import { AvatarPickerModal } from './AvatarPickerModal';
 import { SkillsEditor } from './SkillsEditor';
@@ -12,6 +13,7 @@ import { ExperienceEditor } from './ExperienceEditor';
 import { ProjectsEditor } from './ProjectsEditor';
 import { ChipLogoEditor } from './ChipLogoEditor';
 import { PageStructurePanel } from './PageStructurePanel';
+import { Button } from '@/components/ui/button';
 
 interface InspectorProps {
   selectedBlock: Block | null;
@@ -137,27 +139,47 @@ export function Inspector({
             <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               Avatar
             </label>
-            <button
-              onClick={() => setShowAvatarPicker(true)}
-              className="relative group w-20 h-20 overflow-hidden border-4 border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
-              style={{
-                borderRadius: `${selectedBlock.props.avatarRoundness || 100}%`,
-                backgroundColor: selectedBlock.props.avatarBgColor || '#ffffff'
-              }}
-            >
-              <img
-                src={selectedBlock.props.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'}
-                alt="Avatar"
-                className="w-full h-full object-cover"
-              />
-              {/* Pencil Icon Overlay */}
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Pencil className="w-6 h-6 text-white" />
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-neutral-600 dark:text-neutral-400">Show background</div>
+                <Toggle
+                  checked={selectedBlock.props.useAvatarBg ?? (selectedBlock.props.avatarBgColor ? true : false)}
+                  onChange={(v) => handlePropChange('useAvatarBg', v)}
+                />
               </div>
-            </button>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
-              Click to change avatar
-            </p>
+
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-neutral-600 dark:text-neutral-400">Use shadow</div>
+                <Toggle
+                  checked={selectedBlock.props.avatarShadow ?? false}
+                  onChange={(v) => handlePropChange('avatarShadow', v)}
+                />
+              </div>
+
+              <button
+                onClick={() => setShowAvatarPicker(true)}
+                className="relative group w-20 h-20 overflow-hidden border-4 border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all"
+                style={{
+                  borderRadius: `${selectedBlock.props.avatarRoundness || 100}%`,
+                  backgroundColor: (selectedBlock.props.useAvatarBg ?? (selectedBlock.props.avatarBgColor ? true : false)) ? (selectedBlock.props.avatarBgColor || '#ffffff') : 'transparent',
+                  boxShadow: selectedBlock.props.avatarShadow ? '0 6px 18px rgba(15,23,42,0.12)' : 'none'
+                }}
+              >
+                <img
+                  src={selectedBlock.props.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'}
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Pencil className="w-6 h-6 text-white" />
+                </div>
+              </button>
+
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+                Click to change avatar
+              </p>
+            </div>
           </div>
         )}
 
@@ -415,8 +437,12 @@ export function Inspector({
                 <span>100px</span>
               </div>
             </div>
+
           </>
         )}
+
+
+
 
         {definition.inspectorFields.map((field) => (
           <InspectorFieldRenderer

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { applyThemeMode, getInitialThemeMode, ThemeMode } from '@/lib/theme';
 import type { Profile as UiProfile, Block } from '@/types';
 import { getPublicProfile } from '@/api/profile';

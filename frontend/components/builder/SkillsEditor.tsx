@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Skill } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Plus, Trash2, GripVertical } from 'lucide-react';

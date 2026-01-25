@@ -11,8 +11,8 @@ interface ExperienceBlockRendererProps {
 function parseDescriptionText(text: string, chipLogos: { [key: string]: string } = {}) {
   // Split by lines to handle lists
   const lines = text.split('\n');
-  const result: JSX.Element[] = [];
-  let listItems: { type: 'ul' | 'ol', items: JSX.Element[] } | null = null;
+  const result: React.ReactNode[] = [];
+  let listItems: { type: 'ul' | 'ol', items: React.ReactNode[] } | null = null;
   let listKey = 0;
 
   lines.forEach((line, lineIndex) => {
@@ -63,7 +63,7 @@ function parseDescriptionText(text: string, chipLogos: { [key: string]: string }
   return result.length > 0 ? result : text;
 }
 
-function createList(listItems: { type: 'ul' | 'ol', items: JSX.Element[] }, key: number) {
+function createList(listItems: { type: 'ul' | 'ol', items: React.ReactNode[] }, key: number) {
   const ListTag = listItems.type;
   return (
     <ListTag key={`list-${key}`} className={listItems.type === 'ul' ? 'list-disc' : 'list-decimal'}>
@@ -73,7 +73,7 @@ function createList(listItems: { type: 'ul' | 'ol', items: JSX.Element[] }, key:
 }
 
 function parseInlineMarkdown(text: string, chipLogos: { [key: string]: string } = {}, lineIndex: number = 0) {
-  const elements: JSX.Element[] = [];
+  const elements: React.ReactNode[] = [];
   let currentIndex = 0;
   
   // Regex patterns

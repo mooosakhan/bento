@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/Button';
+"use client"
+import React, { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import {
   Smartphone,
@@ -20,6 +21,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { Logout } from '@/api/auth';
+import { ProfileModal } from '@/components/builder/ProfileModal';
 
 interface BuilderHeaderProps {
   viewMode: 'mobile' | 'tablet' | 'desktop';
@@ -65,6 +68,32 @@ export function BuilderHeader({
 
   const [isJiggling, setIsJiggling] = useState(false);
 
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showMenu = () => {
+    if (hideTimeout.current) {
+      clearTimeout(hideTimeout.current);
+      hideTimeout.current = null;
+    }
+    setMenuVisible(true);
+  };
+
+  const startHideTimer = () => {
+    if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    hideTimeout.current = setTimeout(() => {
+      setMenuVisible(false);
+      hideTimeout.current = null;
+    }, 200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    };
+  }, []);
+
   // Handle click event
   const handleClick = () => {
     setIsJiggling(true);
@@ -75,6 +104,10 @@ export function BuilderHeader({
     }, 1000);
   };
 
+  const handleLogout = async () => {
+    await Logout();
+    window.location.href = '/login';
+  }
   return (
     <header className="sticky top-0 z-40 bg-white dark:bg-[#131111] border-b border-neutral-200 dark:border-neutral-800 h-16">
       <div className="h-full px-6 flex items-center justify-between">
@@ -83,11 +116,11 @@ export function BuilderHeader({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold text-neutral-900 dark:text-white tracking-tight">
-                BentoBuilder
+                Portfoli.me
               </h1>
-              <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded">
+              {/* <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded">
                 BETA
-              </span>
+              </span> */}
             </div>
           </div>
         </div>
@@ -240,24 +273,61 @@ export function BuilderHeader({
             <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </a>
           <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
+
 
 
           {/* Publish Button - Primary CTA */}
-          {/* <button
+          <button
             onClick={onPublishClick}
-            className="px-5 py-2 rounded-full bg-gradient-to-r from-neutral-900 to-neutral-800 dark:from-white dark:to-neutral-100 text-white dark:text-neutral-900 font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 active:scale-100 transition-all duration-200 flex items-center gap-2"
+            className="px-4 py-[7px] rounded-full bg-gradient-to-r from-neutral-900 to-neutral-800 dark:from-white dark:to-neutral-100 text-white dark:text-neutral-900 font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 active:scale-100 transition-all duration-200 flex items-center gap-2 cursor-pointer"
           >
             <Sparkles className="w-4 h-4" />
             <span>Publish</span>
-          </button> */}
+          </button>
+          <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
 
-          <div className='w-full h-full cursor-pointer bg--200 overflow-aut'>
-            <Avatar size="lg" className='overflow-auto hover:dark:bg-neutral-100 rounded-full'>
-              <AvatarImage src="https://api.dicebear.com/9.x/lorelei/svg?seed=Kingston" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+          <div className='w-full h-full flex items-center justify-center'>
+            <div
+              className="relative"
+              onMouseEnter={showMenu}
+              onMouseLeave={startHideTimer}
+            >
+              <div className="cursor-pointer">
+                <Avatar size="lg" className='overflow-auto hover:dark:bg-neutral-100 rounded-full'>
+                  <AvatarImage src="https://api.dicebear.com/9.x/lorelei/svg?seed=Kingston" alt="@shadcn" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </div>
 
+              <div
+                className={`absolute right-0 mt-2 w-44 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg py-2 z-50 transition-opacity ${menuVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                onMouseEnter={showMenu}
+                onMouseLeave={startHideTimer}
+              >
+                <button
+                  onClick={() => setProfileModalOpen(true)}
+                  className="w-full text-left block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                >
+                  Profile
+                </button>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                  className="w-full text-left block px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
           </div>
+          {profileModalOpen && (
+            <ProfileModal
+              initialHandle={publicHandle}
+              onClose={() => setProfileModalOpen(false)}
+            />
+          )}
         </div>
       </div>
     </header>

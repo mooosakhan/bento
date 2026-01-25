@@ -66,7 +66,7 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
                   onClick={() => onSelectBlock(block.id)}
                   className={`w-full px-3 py-2.5 flex items-center gap-3 transition-colors text-left ${
                     isSelected
-                      ? 'bg-blue-50 dark:bg-blue-900/20'
+                      ? 'bg-neutral-50 dark:bg-neutral-900/20'
                       : 'hover:bg-neutral-50 dark:hover:bg-neutral-800'
                   }`}
                 >
@@ -112,7 +112,7 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
                   </div>
                   
                   {isSelected && (
-                    <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-blue-500" />
+                    <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-neutral-500" />
                   )}
                 </button>
                 
@@ -133,7 +133,7 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
                           onUpdateBlock(block.id, { gapBefore: Number(e.target.value) });
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex-1 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                        className="flex-1 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neutral-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
                       />
                       <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 w-10 text-right">
                         {block.gapBefore ?? 16}px

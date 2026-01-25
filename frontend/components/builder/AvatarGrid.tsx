@@ -6,7 +6,7 @@ interface AvatarGridProps {
     onSelect: (avatarPath: string) => void;
 }
 
-type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others' | 'ramx';
+type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others' | 'ramx' | 'adventurer';
 
 const AVATAR_CATEGORY_KEY = 'avatar-selected-category';
 
@@ -18,23 +18,28 @@ const AVATAR_PRESETS = {
         url: `/avatars/bento/face${i + 1}.jpg`,
         alt: `Bento Avatar ${i + 1}`,
     })),
-    lorelei: Array.from({ length: 8 }, (_, i) => ({
+    lorelei: Array.from({ length: 50 }, (_, i) => ({
         id: `lorelei-${i + 1}`,
         url: `https://api.dicebear.com/7.x/lorelei/svg?seed=lorelei${i + 1}`,
         alt: `Lorelei Avatar ${i + 1}`,
     })),
-    notionists: Array.from({ length: 8 }, (_, i) => ({
+    notionists: Array.from({ length: 50 }, (_, i) => ({
         id: `notionists-${i + 1}`,
         url: `https://api.dicebear.com/7.x/notionists/svg?seed=notionists${i + 1}`,
         alt: `Notionists Avatar ${i + 1}`,
     })),
+    adventurer: Array.from({ length: 50 }, (_, i) => ({
+        id: `adventurer-${i + 1}`,
+        url: `https://api.dicebear.com/7.x/adventurer/svg?seed=adventurer${i + 1}`,
+        alt: `Adventurer Avatar ${i + 1}`,
+    })),    
     others: [
-        ...Array.from({ length: 4 }, (_, i) => ({
+        ...Array.from({ length: 20 }, (_, i) => ({
             id: `croodles-${i + 1}`,
             url: `https://api.dicebear.com/7.x/croodles/svg?seed=croodles${i + 1}`,
             alt: `Croodles Avatar ${i + 1}`,
         })),
-        ...Array.from({ length: 4 }, (_, i) => ({
+        ...Array.from({ length: 20 }, (_, i) => ({
             id: `openpeeps-${i + 1}`,
             url: `https://api.dicebear.com/7.x/open-peeps/svg?seed=openpeeps${i + 1}`,
             alt: `Open Peeps Avatar ${i + 1}`,
@@ -97,6 +102,16 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                 >
                     Notionists
                 </button>
+                  <button
+                    onClick={() => setSelectedCategory('adventurer')}
+                    className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'adventurer'
+                        ? 'bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                        }`}
+                >
+                    Adventure
+                </button>
+
                 <button
                     onClick={() => setSelectedCategory('bento')}
                     className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'bento'

@@ -10,7 +10,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'BentoBuilder - Portfolio Builder',
+  title: ' Portfolio Builder',
   description: 'Create your beautiful portfolio profile page',
 }
 

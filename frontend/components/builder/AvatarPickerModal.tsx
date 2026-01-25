@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Upload, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { AvatarUpload } from './AvatarUpload';
 import { AvatarUrlInput } from './AvatarUrlInput';
 import { AvatarGrid } from './AvatarGrid';

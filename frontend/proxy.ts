@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
  * If your app is hosted under a sub-path, set it like "/app".
  * Otherwise keep "".
  */
-const BASE_PATH = "";
+const BASE_PATH: string = "";
 
 /** roles you support */
 type Role = "admin" | "user";
@@ -24,7 +24,7 @@ function p(path: string): string {
 }
 
 const LOGIN_PATH = p("/login");
-const REGISTER_PATH = p("/register");
+const REGISTER_PATH = p("/signup");
 
 const PUBLIC_PREFIXES: string[] = [
   p("/"),

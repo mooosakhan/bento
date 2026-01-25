@@ -1,6 +1,6 @@
 import React from 'react';
 import { templates, Template, applyTemplate } from '@/lib/templates';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { X, Code, Palette, GraduationCap, Rocket } from 'lucide-react';
 import { Block } from '@/types';
 

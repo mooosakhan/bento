@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Copy, Check, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface PublishModalProps {
   handle: string;
@@ -77,7 +77,7 @@ export function PublishModal({ handle, onClose }: PublishModalProps) {
           {/* Actions */}
           <div className="flex gap-3">
             <Button
-              variant="primary"
+              variant="default"
               className="flex-1"
               onClick={() => {
                 window.open(profileUrl, '_blank');

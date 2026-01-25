@@ -57,7 +57,7 @@ Added `darkMode: 'class'` to enable class-based dark mode strategy.
 - **Preview mode**: Matches theme in real-time
 
 ### UI Components
-- **Button** (`/components/ui/Button.tsx`): All variants (primary, secondary, ghost, danger)
+- **Button** (`/components/ui/button.tsx`): All variants (primary, secondary, ghost, danger)
 - **Input** (`/components/ui/Input.tsx`): Dark backgrounds, borders, focus states
 - **Textarea** (`/components/ui/Textarea.tsx`): Matching Input styling
 - **Select** (`/components/ui/Select.tsx`): Dark dropdown with proper contrast

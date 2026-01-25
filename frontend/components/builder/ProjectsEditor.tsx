@@ -1,6 +1,6 @@
 import React from 'react';
 import { Project } from '@/types';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Plus, Trash2, GripVertical, X } from 'lucide-react';

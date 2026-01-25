@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image as ImageIcon, X } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface ChipLogoEditorProps {
   bio: string;
@@ -164,7 +164,7 @@ export function ChipLogoEditor({ bio, chipLogos, onChipLogosChange }: ChipLogoEd
                 )}
                 <div className="flex gap-2">
                   <Button
-                    variant="primary"
+                    variant="default"
                     onClick={() => handleAddLogo(chip)}
                     className="flex-1 text-xs py-1.5"
                   >
