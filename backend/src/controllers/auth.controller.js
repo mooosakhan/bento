@@ -150,6 +150,8 @@ export async function register(req, res) {
     passwordHash,
   });
 
+  console.log(user, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<user");
+
   const baseHandle =
     slugifyHandle(name) || slugifyHandle(email.split("@")[0]) || "user";
   const handle = await ensureUniqueHandle(baseHandle);
@@ -165,8 +167,10 @@ export async function register(req, res) {
 
   const token = signToken(user);
   return res.status(201).json({
+    success: true,
+    message: "Registration successful",
     token,
-    user: { id: user._id, name: user.name, email: user.email },
+    user: { id: user._id, name: user.name, email: user.email, role: "user" },
     handle,
   });
 }
@@ -192,8 +196,10 @@ export async function login(req, res) {
     .lean();
 
   return res.json({
+    message: "Login successful",
+    success: true,
     token,
-    user: { id: user._id, name: user.name, email: user.email },
+    user: { id: user._id, name: user.name, email: user.email, role: user.role },
     handle: profile?.handle || null,
   });
 }
@@ -202,7 +208,7 @@ export async function me(req, res) {
   await dbConnect();
   // req.user set by auth middleware
   const user = await User.findById(req.user.id)
-    .select("_id name email createdAt")
+    .select("_id name email role createdAt")
     .lean();
   if (!user) return res.status(404).json({ message: "User not found" });
   return res.json({ user });

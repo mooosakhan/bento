@@ -9,7 +9,7 @@ import { BlockRenderer } from '@/components/blocks/BlockRenderer';
 import { Button } from '@/components/ui/Button';
 import { applyThemeMode, getInitialThemeMode, ThemeMode } from '@/lib/theme';
 import type { Profile as UiProfile, Block } from '@/types';
-import { getMyProfile, getPublicProfile } from '@/lib/profileApi';
+import { getPublicProfile } from '@/api/profile';
 
 // -----------------------------
 // 1) Backend response types
@@ -116,7 +116,7 @@ export default function ProfilePage() {
     return (
       <div className="space-y-4">
         {profile.blocks.map((block) => (
-          <div key={block.id}>
+          <div key={block.id} style={{ marginTop: block.gapBefore ? `${block.gapBefore}px` : '0' }}>
             <BlockRenderer block={block} theme={profile.theme} />
           </div>
         ))}

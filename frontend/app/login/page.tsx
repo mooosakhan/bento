@@ -6,6 +6,14 @@ import { api } from "@/lib/api";
 import { setAuthToken } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { setCookie } from "cookies-next";
+import { Login } from "@/api/auth/login/route";
+
+interface LoginResponse {
+  token: string;
+  user: { id: string; name: string; email: string };
+  handle: string | null;
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,25 +22,58 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  async function onSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErr('');
     setLoading(true);
-    setErr(null);
-    try {
-      const res = await api<{
-        token: string;
-        user: { id: string; name: string; email: string };
-        handle: string | null;
-      }>("/api/auth/login", { method: "POST", body: { email, password } });
 
-      setAuthToken(res.token);
-      router.push("/builder");
-    } catch (e: any) {
-      setErr(e?.message || "Login failed");
+    try {
+      // Step 1: Login to get token
+      const loginResponse = await Login({ email, password });
+
+      // Check if login failed
+      if (!loginResponse?.success) {
+        throw new Error(loginResponse?.message || 'Login failed');
+      }
+
+      const token = loginResponse?.token;
+      const user = loginResponse?.user;
+
+      console.log(user, "User", token, "token ");
+
+
+      if (!token) {
+        throw new Error('No token received from server');
+      }
+
+      if (!user) {
+        throw new Error('No user data received from server');
+      }
+
+      setCookie('authToken', token, {
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+      });
+      setCookie('user', JSON.stringify(user), {
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+      });
+      if (user.role == 'user') {
+        router.push('/builder');
+      }
+      else if (user.role === 'admin') {
+        router.push('/admin');
+      }
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message
+        || err?.message
+        || 'Login failed. Please check your credentials.';
+      setErr(errorMessage);
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-[#f7f7f7] dark:bg-neutral-950 flex items-center justify-center p-6">
@@ -42,7 +83,7 @@ export default function LoginPage() {
           Sign in to sync your portfolio to the cloud.
         </p>
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-3">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-3">
           <Input label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Input
             label="Password"

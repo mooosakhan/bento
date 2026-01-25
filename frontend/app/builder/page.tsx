@@ -44,7 +44,7 @@ import { BlockRenderer } from '@/components/blocks/BlockRenderer';
 
 // ✅ backend sync
 import { isLoggedIn } from "@/lib/auth";
-import { getMyProfile, updateMyProfile } from "@/lib/profileApi";
+import { getMyProfile,updateMyProfile } from '@/api/profile';
 
 const TABS = [
   { id: '1', label: 'Navbar', icon: <HammerIcon className="w-4 h-4" /> },
@@ -123,37 +123,35 @@ export default function BuilderPage() {
     async function load() {
       try {
         // CLOUD
-        if (isLoggedIn()) {
-          setCloudStatus("loading");
-          const cloud = await getMyProfile();
-          // if (!alive) return;
+        setCloudStatus("loading");
+        const cloud = await getMyProfile();
+        // if (!alive) return;
 
-          // keep theme mode synced
-          const themeMode = localStorage.getItem('bento-theme-mode');
-          if (themeMode && (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system')) {
-            cloud.theme.mode = themeMode;
-          }
-
-          setProfile(cloud);
-          addToHistory(cloud.blocks);
-          saveProfile(cloud); // also keep local cache
-          setCloudStatus("saved");
-          setIsSaved(true);
-          return;
+        // keep theme mode synced
+        const themeMode = localStorage.getItem('bento-theme-mode');
+        if (themeMode && (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system')) {
+          cloud.theme.mode = themeMode;
         }
+
+        setProfile(cloud);
+        addToHistory(cloud.blocks);
+        saveProfile(cloud); // also keep local cache
+        setCloudStatus("saved");
+        setIsSaved(true);
+        return;
 
         // LOCAL
-        const local = getProfile();
-        if (local && alive) {
-          const themeMode = localStorage.getItem('bento-theme-mode');
-          if (themeMode && (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system')) {
-            local.theme.mode = themeMode;
-          }
-          setProfile(local);
-          addToHistory(local.blocks);
-          setCloudStatus("local-only");
-          setIsSaved(true);
-        }
+        // const local = getProfile();
+        // if (local && alive) {
+        //   const themeMode = localStorage.getItem('bento-theme-mode');
+        //   if (themeMode && (themeMode === 'light' || themeMode === 'dark' || themeMode === 'system')) {
+        //     local.theme.mode = themeMode;
+        //   }
+        //   setProfile(local);
+        //   addToHistory(local.blocks);
+        //   setCloudStatus("local-only");
+        //   setIsSaved(true);
+        // }
       } catch {
         // fallback to local
         const local = getProfile();
@@ -264,7 +262,7 @@ export default function BuilderPage() {
       }
 
       // ✅ save cloud if logged in
-      if (isLoggedIn()) {
+      if (true) {
         try {
           setCloudStatus("saving");
           await updateMyProfile(updatedProfile);
@@ -405,8 +403,8 @@ export default function BuilderPage() {
 
   const previewContainerWidth =
     viewMode === 'mobile' ? 'max-w-md' :
-    viewMode === 'tablet' ? 'max-w-3xl' :
-    'max-w-5xl';
+      viewMode === 'tablet' ? 'max-w-3xl' :
+        'max-w-5xl';
 
   if (isPreview) {
     return (
@@ -423,27 +421,24 @@ export default function BuilderPage() {
             <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-700 rounded-full p-1">
               <button
                 onClick={() => setViewMode('mobile')}
-                className={`px-3 py-1.5 rounded-full transition-colors ${
-                  viewMode === 'mobile' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
-                }`}
+                className={`px-3 py-1.5 rounded-full transition-colors ${viewMode === 'mobile' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
                 title="Mobile view"
               >
                 <Smartphone className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('tablet')}
-                className={`px-3 py-1.5 rounded-full transition-colors ${
-                  viewMode === 'tablet' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
-                }`}
+                className={`px-3 py-1.5 rounded-full transition-colors ${viewMode === 'tablet' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
                 title="Tablet view"
               >
                 <Tablet className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('desktop')}
-                className={`px-3 py-1.5 rounded-full transition-colors ${
-                  viewMode === 'desktop' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
-                }`}
+                className={`px-3 py-1.5 rounded-full transition-colors ${viewMode === 'desktop' ? 'bg-white dark:bg-neutral-600 shadow-sm' : 'text-neutral-600 dark:text-neutral-300'
+                  }`}
                 title="Desktop view"
               >
                 <Monitor className="w-4 h-4" />
@@ -503,9 +498,9 @@ export default function BuilderPage() {
 
                 <div className="mt-3 px-2 flex items-center gap-3">
                   <div className="flex h-7 w-7 items-center justify-center rounded-md bg-neutral-100">
-                    <Plus className="h-4 w-4 text-neutral-900" />
+                    {/* <Plus className="h-4 w-4 text-neutral-900" /> */}
                   </div>
-                  <div className="text-md font-semibold text-neutral-400">Wireframer</div>
+                  <div className="text-md font-semibold text-neutral-400">My Portolfio</div>
                 </div>
 
                 <div className="my-6 h-px bg-neutral-800 px-2" />

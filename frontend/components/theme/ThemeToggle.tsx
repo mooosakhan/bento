@@ -41,7 +41,7 @@ export function ThemeToggle() {
     <button
       onClick={toggleTheme}
       title={getTooltip()}
-      className="p-2.5 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-neutral-700 dark:text-neutral-300"
+      className="p-2.5 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer text-neutral-700 dark:text-neutral-300"
     >
       {getIcon()}
     </button>

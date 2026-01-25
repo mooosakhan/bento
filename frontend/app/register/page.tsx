@@ -6,6 +6,19 @@ import { api } from "@/lib/api";
 import { setAuthToken } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Register } from "@/api/auth/register/route";
+import { setCookie } from "cookies-next";
+
+
+interface RegisterResponse {
+  data: {
+    token: string;
+    user: { id: string; name: string; email: string, role: string };
+    handle: string | null;
+    message?: string;
+    success?: boolean;
+  };
+}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,25 +28,78 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setErr(null);
-    try {
-      const res = await api<{
-        token: string;
-        user: { id: string; name: string; email: string };
-        handle: string;
-      }>("/api/auth/register", { method: "POST", body: { name, email, password } });
+  // async function onSubmit(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setErr(null);
+  //   try {
+  //     const res
+  //     setAuthToken(res.token);
+  //     router.push("/builder");
+  //   } catch (e: any) {
+  //     setErr(e?.message || "Register failed");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
-      setAuthToken(res.token);
-      router.push("/builder");
-    } catch (e: any) {
-      setErr(e?.message || "Register failed");
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr('');
+    setLoading(true);
+
+    try {
+      // Step 1: Login to get token
+      const registerResponse: RegisterResponse = await Register({ name, email, password });
+      console.log(registerResponse, "thhhhhhhhhhhhhhhhhhhhhhhhis");
+
+      // Check if login failed 
+      if (!registerResponse?.data?.success) {
+        throw new Error(registerResponse?.data?.message || 'Login failed');
+      }
+
+      const token = registerResponse?.data?.token;
+      const user = registerResponse?.data?.user;
+
+      console.log(user, "User", token, "token ");
+
+
+      if (!token) {
+        throw new Error('No token received from server');
+      }
+
+      if (!user) {
+        throw new Error('No user data received from server');
+      }
+
+      setCookie('authToken', token, {
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+      });
+      setCookie('user', JSON.stringify(user), {
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/',
+      });
+      if (user.role == 'user') {
+        console.log("in uuuuuuuuuuuuuuuuuser")
+        router.push('/builder');
+      }
+      else if (user.role === 'admin') {
+        router.push('/admin');
+      }
+      else {
+        router.push('/');
+      }
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message
+        || err?.message
+        || 'Login failed. Please check your credentials.';
+      setErr(errorMessage);
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-[#f7f7f7] dark:bg-neutral-950 flex items-center justify-center p-6">
