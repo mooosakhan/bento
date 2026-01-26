@@ -52,53 +52,68 @@ export function ProjectsEditor({ projects, onChange }: ProjectsEditorProps) {
       <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
         Projects
       </label>
-      
+
       <div className="space-y-4 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {projects.map((project, index) => (
-          <div key={index} className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4 space-y-3">
-            <div className="flex items-start gap-2">
-              <GripVertical className="w-4 h-4 text-neutral-400 mt-3" />
+          <div key={index} className="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-4 space-y-3">
+            <div className="flex flex-col items-start gap-2">
+              <div className='flex items-center justify-between w-full'>
+                <span className="py-2 cursor-context-menu text-neutral-400 hover:text-neutral-600 transition-colors">
+                  # {index + 1}
+                </span>
+                <Button
+                  variant="ghost"
+                  onClick={() => removeProject(index)}
+                  className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
               <div className="flex-1 space-y-3">
                 <Input
                   type="text"
                   value={project.title}
                   onChange={(e) => updateProject(index, { title: e.target.value })}
                   placeholder="Project Title"
+                  label='Title'
                 />
                 <Textarea
                   value={project.description}
                   onChange={(e) => updateProject(index, { description: e.target.value })}
                   placeholder="Description"
-                  rows={3}
+                  rows={5}
+                  label='Description'
                 />
                 <Input
                   type="url"
                   value={project.image || ''}
                   onChange={(e) => updateProject(index, { image: e.target.value })}
                   placeholder="Image URL (optional)"
+                  label='Image URL'
                 />
                 <Input
                   type="url"
                   value={project.link || ''}
                   onChange={(e) => updateProject(index, { link: e.target.value })}
                   placeholder="Project Link (optional)"
+                  label='Project Link'
                 />
-                
+
                 {/* Tech Stack */}
                 <div>
-                  <label className="block text-xs font-medium text-neutral-600 mb-2">
+                  <label className="block text-sm font-medium text-neutral-300 mb-2">
                     Tech Stack
                   </label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {(project.techStack || []).map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs border border-neutral-200"
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-neutral-800 rounded-full text-xs border border-neutral-200 dark:border-neutral-700"
                       >
                         {tech}
                         <button
                           onClick={() => removeTechFromProject(index, techIndex)}
-                          className="hover:text-red-600"
+                          className="hover:text-red-600 cursor-pointer transition-colors"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -119,12 +134,7 @@ export function ProjectsEditor({ projects, onChange }: ProjectsEditorProps) {
                   />
                 </div>
               </div>
-              <button
-                onClick={() => removeProject(index)}
-                className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+
             </div>
           </div>
         ))}

@@ -159,12 +159,12 @@ export function HeaderBlockRenderer({ props }: HeaderBlockRendererProps) {
       style={{ gap: `${avatarToContentGap}px` }}
     >
       <div 
-        className="overflow-hidden shadow-md"
+        className={`overflow-hidden ${props.avatarShadow ? 'shadow-md' : ''} `}
         style={{ 
           width: `${avatarSize}px`,
           height: `${avatarSize}px`,
           borderRadius: `${avatarRoundness}%`,
-          backgroundColor: avatarBgColor 
+          backgroundColor: `${props.useAvatarBg ? avatarBgColor : 'transparent'}` 
         }}
       >
         <img 

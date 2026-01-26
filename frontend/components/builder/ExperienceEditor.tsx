@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ExperienceItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Toggle } from '@/components/ui/Toggle';
-import { Plus, Trash2, GripVertical, Eye, EyeOff, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Eye, EyeOff, Image as ImageIcon, Info } from 'lucide-react';
 
 interface ExperienceEditorProps {
   items: ExperienceItem[];
@@ -254,6 +254,30 @@ function parseInlineMarkdown(text: string, chipLogos: { [key: string]: string } 
 
 export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
   const [previewMode, setPreviewMode] = useState<{ [key: number]: boolean }>({});
+  const [infoVisible, setInfoVisible] = useState(false);
+  const infoHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showInfo = () => {
+    if (infoHideTimeout.current) {
+      clearTimeout(infoHideTimeout.current);
+      infoHideTimeout.current = null;
+    }
+    setInfoVisible(true);
+  };
+
+  const startHideTimer = () => {
+    if (infoHideTimeout.current) clearTimeout(infoHideTimeout.current);
+    infoHideTimeout.current = setTimeout(() => {
+      setInfoVisible(false);
+      infoHideTimeout.current = null;
+    }, 100);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (infoHideTimeout.current) clearTimeout(infoHideTimeout.current);
+    };
+  }, []);
 
   const addItem = () => {
     onChange([
@@ -328,11 +352,23 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
         Experience
       </label>
 
-      <div className="space-y-4 overflow-y-auto scrollbar-light scrollbar-dark">
+      <div className="space-y-4 overflow-visible scrollbar-light scrollbar-dark">
         {items.map((item, index) => (
-          <div key={index} className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-4 space-y-3">
-            <div className="flex items-start gap-2">
-              <GripVertical className="w-4 h-4 text-neutral-400 mt-3" />
+          <div key={index} className="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-4 space-y-3">
+            <div className="flex items-start flex-col gap-2">
+              <div className='flex items-center justify-between w-full'>
+                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
+                  # {index + 1}
+                </label>
+                <Button
+                  onClick={() => removeItem(index)}
+                  className="p-2 text-neutral-400 hover:text-red-600 transition-colors bg-none self-end"
+                  variant="ghost"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+
               <div className="flex-1 space-y-3">
                 {/* Role */}
                 <Input
@@ -340,6 +376,8 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                   value={item.role}
                   onChange={(e) => updateItem(index, { role: e.target.value })}
                   placeholder="Role"
+                  className=''
+                  label='Role'
                 />
 
                 {/* Company Name with Blur Toggle */}
@@ -350,6 +388,7 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                     onChange={(e) => updateItem(index, { company: e.target.value })}
                     placeholder="Company"
                     className={item.blurCompanyTitle ? 'blur-sm' : ''}
+                    label="Company Name"
                   />
                   <Toggle
                     checked={item.blurCompanyTitle || false}
@@ -360,14 +399,13 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
 
                 {/* Company Logo */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                    Company Logo (URL or SVG code)
-                  </label>
+
                   <Textarea
                     value={item.companyLogo || ''}
                     onChange={(e) => updateItem(index, { companyLogo: e.target.value })}
                     placeholder="https://example.com/logo.png or <svg>...</svg>"
-                    rows={2}
+                    rows={4}
+                    label="Company Logo URL or SVG"
                   />
 
                   {/* Logo Preview */}
@@ -438,18 +476,22 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                 </div>
 
                 {/* Dates */}
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2">
+
                   <Input
                     type="text"
                     value={item.startDate}
                     onChange={(e) => updateItem(index, { startDate: e.target.value })}
                     placeholder="Start Date"
+                    label="Start Date"
                   />
+
                   <Input
                     type="text"
                     value={item.endDate || ''}
                     onChange={(e) => updateItem(index, { endDate: e.target.value })}
                     placeholder="End Date (or leave empty)"
+                    label="End Date"
                   />
                 </div>
 
@@ -477,18 +519,58 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                     </button>
                   </div> */}
 
-                  {previewMode[index] ? (
-                    <div className="min-h-[80px] p-3 bg-white dark:bg-neutral-900 rounded border border-neutral-300 dark:border-neutral-600 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-1">
-                      {parseDescriptionText(item.description, item.chipLogos || {})}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Description</label>
+
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="relative"
+                          onMouseEnter={showInfo}
+                          onMouseLeave={startHideTimer}
+                        >
+                          <Button
+                            type="button"
+                            aria-label="Markdown help"
+                            variant="ghost"
+                          >
+                            <Info className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                          </Button>
+
+                          <div
+                            className={`absolute right-[-100]  bottom-full mb-2 w-60 text-sm rounded shadow-lg border bg-white dark:bg-neutral-800 p-3 z-50 transition-opacity ${infoVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                            onMouseEnter={showInfo}
+                            onMouseLeave={startHideTimer}
+                          >
+                            <div className="text-neutral-700 dark:text-neutral-300">
+                              Quick Markdown help:
+                              <ul className="list-disc ml-4 mt-2">
+                                <li><strong>Bullets:</strong> start a line with <code>-</code> or <code>*</code></li>
+                                <li><strong>Numbered:</strong> <code>1. Item</code></li>
+                                <li><strong>Bold:</strong> <code>**bold**</code>, <strong>Bold</strong></li>
+                                <li><strong>Italic:</strong> <code>*italic*</code>, <em>Italic</em></li>
+                                <li><strong>Link:</strong> <code>[text](https://...)</code></li>
+                                <li><strong>Chip:</strong> use <code>#chipname</code> to insert a chip</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  ) : (
-                    <Textarea
-                      value={item.description}
-                      onChange={(e) => updateItem(index, { description: e.target.value })}
-                      placeholder="Description of your role and achievements. Use:\n- Bullet points\n1. Numbered lists\n**bold** *italic* [link](url) #chips"
-                      rows={8}
-                    />
-                  )}
+
+                    {previewMode[index] ? (
+                      <div className="min-h-[80px] p-3 bg-white dark:bg-neutral-900 rounded border border-neutral-300 dark:border-neutral-600 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-1">
+                        {parseDescriptionText(item.description, item.chipLogos || {})}
+                      </div>
+                    ) : (
+                      <Textarea
+                        value={item.description}
+                        onChange={(e) => updateItem(index, { description: e.target.value })}
+                        placeholder="Description of your role and achievements. Use:\n- Bullet points\n1. Numbered lists\n**bold** *italic* [link](url) #chips"
+                        rows={8}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {/* Chips Section */}
@@ -509,12 +591,13 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                               placeholder="Chip name (e.g., React, TypeScript)"
                               className="flex-1 text-base py-2.5"
                             />
-                            <button
+                            <Button
                               onClick={() => removeChip(index, chipIndex)}
                               className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
+                              variant="ghost"
                             >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </Button>
                           </div>
 
                           {/* Chip Logo Editor */}
@@ -540,12 +623,7 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                 </div>
               </div>
 
-              <button
-                onClick={() => removeItem(index)}
-                className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+
             </div>
           </div>
         ))}

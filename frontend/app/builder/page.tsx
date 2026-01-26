@@ -41,7 +41,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
-import { getMyProfile,updateMyProfile } from '@/api/profile';
+import { getMyProfile, updateMyProfile } from '@/api/profile';
 
 const TABS = [
   { id: '1', label: 'Navbar', icon: <HammerIcon className="w-4 h-4" /> },
@@ -100,6 +100,7 @@ export default function BuilderPage() {
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [cursorMode, setCursorMode] = useState<'select' | 'grab'>('select');
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -470,35 +471,42 @@ export default function BuilderPage() {
           canRedo={historyIndex < history.length - 1}
           isSaved={isSaved}
           publicHandle={profile.handle}
-          // ✅ new prop (add to BuilderHeader component)
           cloudStatus={cloudStatus}
         />
 
         <div className="flex-1 flex overflow-hidden">
-          <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white dark:bg-[#111010] border-r border-neutral-200 dark:border-[#111010] overflow-hidden transition-all duration-300`}>
+          <aside className={`${sidebarOpen ? 'w-72' : 'w-0'} lg:w-72 bg-white dark:bg-[#111010] border-r border-neutral-200 dark:border-neutral-800 overflow-hidden transition-all duration-300`}>
             <div className="h-full overflow-y-auto scrollbar-light scrollbar-dark px-4 py-4 space-y-6">
               <div className="pt-4">
-                <div className="flex items-center gap-2 text-sm text-neutral-400 px-2">
-                  <Search className="h-4 w-4" />
-                  <span>Search</span>
+                <div className="flex items-center gap-2 px-2">
+                  <div className="relative w-full">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 dark:text-neutral-500" />
+                    
+                    <input
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search blocks (e.g. header, projects)"
+                      className="w-full pl-10 pr-3 py-2 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] text-sm text-neutral-700 dark:text-neutral-200 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+                    />
+                  </div>
                 </div>
 
-                <div className="my-4 px-2 h-px bg-neutral-800" />
+                <div className="my-4 px-2 h-px bg-neutral-300 dark:bg-neutral-700" />
 
-                <div className="text-md px-2 font-semibold text-neutral-500 mb-3">Start</div>
+                <div className="text-md px-2 font-semibold text-neutral-600 dark:text-neutral-200 mb-3">Start</div>
 
                 <div className="mt-3 px-2 flex items-center gap-3">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-neutral-100">
-                    {/* <Plus className="h-4 w-4 text-neutral-900" /> */}
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-600">
+                    {/* <Plus className="h-4 w-4 text-neutral-900 dark:text-neutral-100" /> */}
                   </div>
-                  <div className="text-md font-semibold text-neutral-400">My Portolfio</div>
+                  <div className="text-md font-semibold text-neutral-500 dark:text-neutral-400">My Portfolio</div>
                 </div>
 
-                <div className="my-6 h-px bg-neutral-800 px-2" />
-                <div className="text-md px-2 font-semibold text-neutral-500 mb-3">Basics</div>
+                <div className="my-6 h-px bg-neutral-300 dark:bg-neutral-700 px-2" />
+                <div className="text-md px-2 font-semibold text-neutral-600 dark:text-neutral-200 mb-3">Basics</div>
 
                 <div>
-                  <BlockLibrary onAddBlock={addBlock} />
+                  <BlockLibrary onAddBlock={addBlock} search={searchQuery} />
                 </div>
               </div>
             </div>
@@ -529,6 +537,7 @@ export default function BuilderPage() {
           </aside>
         </div>
       </div>
+
 
       <DragOverlay />
       {showPublishModal && (

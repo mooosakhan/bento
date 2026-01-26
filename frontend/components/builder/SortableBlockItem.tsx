@@ -40,9 +40,9 @@ export function SortableBlockItem({ block, isSelected, onSelect, cursorMode = 's
       onClick={onSelect}
       className={`group relative rounded-2xl transition-all duration-200 ${containerCursor} ${
         isSelected 
-          ? 'ring-2 ring-neutral-900 dark:ring-white ring-offset-2 dark:ring-offset-neutral-900' 
+          ? 'ring-2 ring-neutral-500 dark:ring-neutral-500 ring-offset-2 dark:ring-offset-neutral-500' 
           : cursorMode === 'select' 
-            ? 'hover:ring-2 hover:ring-neutral-300 dark:hover:ring-neutral-600 hover:ring-offset-2 dark:hover:ring-offset-neutral-900'
+            ? 'hover:ring-2 hover:ring-neutral-300 dark:hover:ring-neutral-600 hover:ring-offset-2 dark:hover:ring-offset-neutral-500'
             : ''
       } ${isDragging ? 'opacity-50 z-50' : ''}`}
     >

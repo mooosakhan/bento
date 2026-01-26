@@ -187,7 +187,9 @@ export function Inspector({
         {selectedBlock.type === 'header' && (
           <div>
             <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Avatar Background Color
+              Avatar Background Color <br /> <span className='text-xs text-neutral-500 dark:text-neutral-400'>
+                (for transparent avatars)
+              </span>
             </label>
             <div className="flex gap-2 items-center">
               <input

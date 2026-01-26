@@ -57,6 +57,8 @@ export interface HeaderBlockProps {
   nameFontSize?: number; // Name font size (default 36)
   bioFontSize?: number; // Bio font size (default 18)
   bioLineHeight?: number; // Bio line height (default 1.56)
+  avatarShadow?: boolean; // Whether to show shadow under avatar
+  useAvatarBg?: boolean; // Whether to use background color for avatar
 }
 
 export interface LinkBlockProps {

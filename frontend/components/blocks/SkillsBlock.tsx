@@ -9,7 +9,7 @@ interface SkillsBlockRendererProps {
 export function SkillsBlockRenderer({ props, theme }: SkillsBlockRendererProps & { theme: any }) {
   if (!props.skills || props.skills.length === 0) {
     return (
-      <div className="bg-white dark:bg-[#161617] rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">
+      <div className="bg-white dark:bg-[#00005c] rounded-2xl p-6 shadow-sm text-center text-neutral-500 dark:text-neutral-400">
         No skills added yet
       </div>
     );
@@ -18,19 +18,19 @@ export function SkillsBlockRenderer({ props, theme }: SkillsBlockRendererProps &
   const getLevelColor = (level?: string) => {
     switch (level) {
       case 'Advanced':
-        return 'bg-neutral-100 dark:bg-[#262626] text-neutral-700 dark:text-neutral-300 ';
+        return 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 ';
       case 'Intermediate':
-        return 'bg-neutral-100 dark:bg-[#262626] text-neutral-700 dark:text-neutral-300 ';
+        return 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 ';
       case 'Beginner':
-        return 'bg-neutral-100 dark:bg-[#262626] text-neutral-700 dark:text-neutral-300 ';
+        return 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 ';
       default:
-        return 'bg-neutral-100 dark:bg-[#262626] text-neutral-700 dark:text-neutral-300 ';
+        return 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 ';
     }
   };
 
   if (props.layout === 'chips') {
     return (
-      <div className="bg-white dark:bg-[#161617]  rounded-2xl p-6 shadow-sm"
+      <div className="bg-none dark:bg-black rounded-2xl p-6 hover:shadow-sm"
         // style={{ backgroundColor: theme?.background }}
         >
         <div className="flex flex-wrap gap-2">
@@ -53,12 +53,12 @@ export function SkillsBlockRenderer({ props, theme }: SkillsBlockRendererProps &
 
   // Grid layout
   return (
-    <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm">
+    <div className="bg-none dark:bg-black rounded-2xl p-6 hover:shadow-sm">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {props.skills.map((skill, index) => (
           <div
             key={index}
-            className={`p-4 rounded-xl border ${getLevelColor(skill.level)} text-center`}
+            className={`p-4 rounded-xl ${getLevelColor(skill.level)} text-center`}
           >
             <div className="font-semibold">{skill.name}</div>
             {skill.level && (

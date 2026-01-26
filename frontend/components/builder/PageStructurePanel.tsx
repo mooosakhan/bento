@@ -112,13 +112,13 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
                   </div>
                   
                   {isSelected && (
-                    <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-neutral-500" />
+                    <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-300" />
                   )}
                 </button>
                 
                 {/* Gap control for each block (except first) */}
                 {index > 0 && (
-                  <div className="px-3 py-2 bg--50 dark:bg-neutral-800/50 border-t  dark:border-neutral-800">
+                  <div className="px-3 py-2 bg-neutral-50 dark:bg-neutral-800/50 border-t dark:border-neutral-800">
                     <div className="flex items-center gap-2">
                       <label className="text-xs text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
                         Gap above:
@@ -149,4 +149,3 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
     </div>
   );
 }
-                        

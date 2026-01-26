@@ -37,9 +37,15 @@ export function SkillsEditor({ skills, onChange }: SkillsEditorProps) {
       
       <div className="space-y-2 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {skills.map((skill, index) => (
-          <div key={index} className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3 space-y-2">
-            <div className="flex items-center gap-2">
-              <GripVertical className="w-4 h-4 text-neutral-400" />
+          <div key={index} className="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-3 space-y-2">
+            <div className="flex items-center gap-0">
+              <Button
+                variant="ghost"
+                className=" text-neutral-400 cursor-grab"
+                aria-label="Drag to reorder"
+              >
+                <GripVertical className="w-4 h-4" />
+              </Button>
               <Input
                 type="text"
                 value={skill.name}
@@ -47,12 +53,13 @@ export function SkillsEditor({ skills, onChange }: SkillsEditorProps) {
                 placeholder="Skill name"
                 className="flex-1"
               />
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => removeSkill(index)}
                 className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
             <Select
               value={skill.level || 'Intermediate'}

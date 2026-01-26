@@ -76,7 +76,7 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
     : 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800';
 
   return (
-    <nav className={`sticky top-0 z-50 ${bgClass} rounded-xl`}>
+    <nav className={`sticky top-0 z-10 ${bgClass} rounded-xl`}>
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
