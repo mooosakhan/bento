@@ -38,7 +38,6 @@ export function SkillsBlockRenderer({ props, theme }: SkillsBlockRendererProps &
             <div
               key={index}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full   ${getLevelColor(skill.level)}`}
-
             >
               <span className="font-medium">{skill.name}</span>
               {skill.level && (

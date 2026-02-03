@@ -69,18 +69,46 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
     { label: props.contactLabel || 'Contact', href: props.contactHref || '#contact', show: props.showContact },
   ].filter(link => link.show !== false);
 
-  const bgClass = props.style === 'transparent' 
-    ? 'bg-transparent' 
-    : props.style === 'filled'
-    ? 'bg-white dark:bg-neutral-900 shadow-sm border-b border-neutral-200 dark:border-neutral-800'
-    : 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800';
+  // Prefer explicit navItems if provided
+  const navItems = Array.isArray((props as any).navItems) && (props as any).navItems.length
+    ? (props as any).navItems.filter((i: any) => i.show !== false)
+    : links;
+
+  const logoAlignment = (props as any).logoAlignment || 'left';
+  const navAlignment = (props as any).navAlignment || 'right';
+  const itemsGap = (props as any).itemsGap !== undefined ? (props as any).itemsGap : 16;
+
+  // Background style handling (bgType, bgColor, bgGradient, bgImage)
+  const bgType = (props as any).bgType || null;
+  const backgroundStyle: React.CSSProperties = {};
+  if (bgType === 'solid' && (props as any).bgColor) {
+    backgroundStyle.background = (props as any).bgColor;
+  } else if (bgType === 'gradient' && (props as any).bgGradient) {
+    backgroundStyle.background = (props as any).bgGradient;
+  } else if (bgType === 'image' && (props as any).bgImage) {
+    backgroundStyle.backgroundImage = `url('${(props as any).bgImage}')`;
+    backgroundStyle.backgroundSize = 'cover';
+    backgroundStyle.backgroundPosition = 'center';
+  }
+
+  const styleFromTheme = {} as React.CSSProperties;
+  // If style-based transparency/blurring still used, keep some defaults
+  if (!bgType) {
+    if (props.style === 'transparent') {
+      styleFromTheme.background = 'transparent';
+    } else if (props.style === 'filled') {
+      styleFromTheme.background = undefined;
+    } else {
+      styleFromTheme.background = undefined;
+    }
+  }
 
   return (
-    <nav className={`sticky top-0 z-10 ${bgClass} rounded-xl`}>
+    <nav className={`sticky top-0 z-10 rounded-xl`} style={{ ...styleFromTheme, ...backgroundStyle }}>
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex items-center h-16 justify-between">
           {/* Logo/Brand */}
-          <div className="flex items-center justify-center gap-2 h-16 overflow-hidden">
+          <div className={`flex items-center h-16 overflow-hidden w-full ${logoAlignment === 'center' ? 'justify-center' : logoAlignment === 'right' ? 'justify-end' : 'justify-start'}`}>
             {props.logoUrl && (
               <div
                 className="overflow-hidden shadow-sm"
@@ -108,16 +136,18 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4 ml-auto">
-            {links.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium"
-              >
-                {link.label}
-              </a>
-            ))}
+          <div className={`hidden md:flex items-center ml-4 w-full ${navAlignment === 'center' ? 'justify-center' : navAlignment === 'right' ? 'justify-end' : 'justify-start'}`}>
+            <div style={{ display: 'flex', gap: `${itemsGap}px`, alignItems: 'center' }}>
+              {navItems.map((link: any, index: number) => (
+                <a
+                  key={link.id || index}
+                  href={link.href}
+                  className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Search and Actions */}
@@ -184,9 +214,9 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
         {isOpen && (
           <div className="md:hidden pb-4 border-t border-neutral-200 dark:border-neutral-700 mt-2 pt-4">
             <div className="flex flex-col space-y-3">
-              {links.map((link, index) => (
+              {navItems.map((link: any, index: number) => (
                 <a
-                  key={index}
+                  key={link.id || index}
                   href={link.href}
                   className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium px-2 py-1"
                   onClick={() => setIsOpen(false)}

@@ -158,11 +158,29 @@ export interface NavbarBlockProps {
   logoSize?: number; // Logo size in pixels (default 40)
 }
 
+export interface NavbarNavItem {
+  id: string;
+  label: string;
+  href: string;
+  show?: boolean;
+}
+
+export interface NavbarBlockPropsExtended extends NavbarBlockProps {
+  navItems?: NavbarNavItem[]; // Ordered list of nav items
+  logoAlignment?: 'left' | 'center' | 'right';
+  navAlignment?: 'left' | 'center' | 'right';
+  itemsGap?: number; // Gap between nav items in px
+  bgType?: 'solid' | 'gradient' | 'image' | 'transparent';
+  bgColor?: string; // for solid
+  bgGradient?: string; // css gradient string
+  bgImage?: string; // image url
+}
+
 // Inspector field configuration
 export interface InspectorField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'url' | 'select' | 'toggle' | 'image-list' | 'skills-editor' | 'experience-editor' | 'projects-editor';
+  type: 'text' | 'textarea' | 'url' | 'select' | 'toggle' | 'image-list' | 'skills-editor' | 'experience-editor' | 'projects-editor' | 'nav-editor';
   placeholder?: string;
   options?: { value: string; label: string }[];
 }

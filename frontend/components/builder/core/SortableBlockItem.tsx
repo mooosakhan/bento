@@ -13,6 +13,7 @@ interface SortableBlockItemProps {
 }
 
 export function SortableBlockItem({ block, isSelected, onSelect, cursorMode = 'select' }: SortableBlockItemProps) {
+  const [mounted, setMounted] = React.useState(false);
   const {
     attributes,
     listeners,
@@ -26,12 +27,20 @@ export function SortableBlockItem({ block, isSelected, onSelect, cursorMode = 's
     disabled: cursorMode === 'grab', // Disable dragging in grab mode
   });
 
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
   const containerCursor = cursorMode === 'grab' ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer';
+
+  // Don't apply dnd attributes until mounted to avoid SSR hydration mismatch
+  const dndAttributes = mounted ? attributes : {};
+  const dndListeners = mounted ? listeners : {};
 
   return (
     <div
@@ -40,7 +49,7 @@ export function SortableBlockItem({ block, isSelected, onSelect, cursorMode = 's
       onClick={onSelect}
       className={`group relative rounded-2xl transition-all duration-200 ${containerCursor} ${
         isSelected 
-          ? 'ring-2 ring-neutral-500 dark:ring-neutral-500 ring-offset-2 dark:ring-offset-neutral-500' 
+          ? '' 
           : cursorMode === 'select' 
             ? 'hover:ring-2 hover:ring-neutral-300 dark:hover:ring-neutral-600 hover:ring-offset-2 dark:hover:ring-offset-neutral-500'
             : ''
@@ -49,8 +58,8 @@ export function SortableBlockItem({ block, isSelected, onSelect, cursorMode = 's
       {/* Drag Handle */}
       {cursorMode === 'select' && (
         <div
-          {...attributes}
-          {...listeners}
+          {...dndAttributes}
+          {...dndListeners}
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-10 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
         >
           <div className="w-8 h-8 flex items-center justify-center bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm hover:shadow-md">

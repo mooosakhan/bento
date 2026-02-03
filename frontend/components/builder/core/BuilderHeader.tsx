@@ -22,7 +22,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { Logout } from '@/api/auth';
-import { ProfileModal } from '@/components/builder/ProfileModal';
+import { ProfileModal } from '@/components/builder/modals/ProfileModal';
 
 interface BuilderHeaderProps {
   viewMode: 'mobile' | 'tablet' | 'desktop';
@@ -272,7 +272,6 @@ export function BuilderHeader({
             <span className="text-xs">portfoli.me/{publicHandle}</span>
             <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </a>
-          <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
           <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
 
 

@@ -48,10 +48,12 @@ export function ProjectsEditor({ projects, onChange }: ProjectsEditorProps) {
   };
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-        Projects
-      </label>
+    <div className="space-y-4">
+      {/* ===== PROJECTS LIST ===== */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold text-neutral-900 dark:text-white uppercase tracking-wide">
+          Projects
+        </h3>
 
       <div className="space-y-4 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {projects.map((project, index) => (
@@ -81,7 +83,7 @@ export function ProjectsEditor({ projects, onChange }: ProjectsEditorProps) {
                   value={project.description}
                   onChange={(e) => updateProject(index, { description: e.target.value })}
                   placeholder="Description"
-                  rows={5}
+                  rows={3}
                   label='Description'
                 />
                 <Input
@@ -148,6 +150,7 @@ export function ProjectsEditor({ projects, onChange }: ProjectsEditorProps) {
         <Plus className="w-4 h-4 mr-2" />
         Add Project
       </Button>
+      </div>
     </div>
   );
 }

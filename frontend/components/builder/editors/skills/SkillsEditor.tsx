@@ -30,10 +30,12 @@ export function SkillsEditor({ skills, onChange }: SkillsEditorProps) {
   };
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-neutral-700">
-        Skills
-      </label>
+    <div className="space-y-4">
+      {/* ===== SKILLS LIST ===== */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold text-neutral-900 dark:text-white uppercase tracking-wide">
+          Skills
+        </h3>
       
       <div className="space-y-2 overflow-y-auto scrollbar-light scrollbar-dark  scrollbar-light scrollbar-dark">
         {skills.map((skill, index) => (
@@ -82,6 +84,7 @@ export function SkillsEditor({ skills, onChange }: SkillsEditorProps) {
         <Plus className="w-4 h-4 mr-2" />
         Add Skill
       </Button>
+      </div>
     </div>
   );
 }

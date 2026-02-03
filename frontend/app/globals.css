@@ -19,6 +19,11 @@
 body {
   font-family: "Poppins", sans-serif;
   background-color: black;
+
+}
+
+button{
+  cursor: pointer;
 }
 
 .lowerPixel {
@@ -242,6 +247,17 @@ body {
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(255,255,255,.28);
 }
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
 
 @layer utilities {
   .drag-handle {

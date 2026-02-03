@@ -182,7 +182,7 @@ export function proxy(req: NextRequest) {
   proceed.headers.set("x-proxy-active", "1");
 
   // logged in + going to login => redirect home
-  if (authed && pathname === LOGIN_PATH) {
+  if (authed && (pathname === LOGIN_PATH || pathname === REGISTER_PATH)) {
     const url = req.nextUrl.clone();
     url.pathname = roleHome;
     return NextResponse.redirect(url);

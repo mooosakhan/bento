@@ -53,7 +53,7 @@ export function ProfileModal({ onClose, initialHandle }: ProfileModalProps) {
     setSaving(true);
     setSuccess('');
     try {
-      await updateMyProfile({ name: name.trim(), email: email.trim(), handle: handle.trim() });
+      await updateMyProfile({ name: name.trim(), email: email.trim() });
       setSuccess('Profile updated');
       setTimeout(() => {
         onClose();

@@ -14,12 +14,12 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { Block, BlockType, Profile, HistoryState } from '@/types';
 import { getBlockDefinition } from '@/lib/blockRegistry';
 import { generateHandle, saveProfile, getProfile } from '@/lib/profileUtils';
-import { BlockLibrary } from '@/components/builder/BlockLibrary';
-import { Canvas } from '@/components/builder/Canvas';
-import { Inspector } from '@/components/builder/Inspector';
-import { PublishModal } from '@/components/builder/PublishModal';
-import { TemplatePickerModal } from '@/components/builder/TemplatePickerModal';
-import { BuilderHeader } from '@/components/builder/BuilderHeader';
+import { BlockLibrary } from '@/components/builder/core/BlockLibrary';
+import { Canvas } from '@/components/builder/core/Canvas';
+import { Inspector } from '@/components/builder/core/Inspector';
+import { PublishModal } from '@/components/builder/modals/PublishModal';
+import { TemplatePickerModal } from '@/components/builder/modals/TemplatePickerModal';
+import { BuilderHeader } from '@/components/builder/core/BuilderHeader';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import {
@@ -523,7 +523,7 @@ export default function BuilderPage() {
             />
           </main>
 
-          <aside className="w-80 bg-neutral-50 dark:bg-neutral-850 border-l border-neutral-200 dark:border-neutral-700 overflow-y-auto scrollbar-light scrollbar-dark">
+          <aside className="w-64 bg-neutral-50 dark:bg-neutral-850 border-l border-neutral-200 dark:border-neutral-700 overflow-y-auto scrollbar-light scrollbar-dark">
             <Inspector
               selectedBlock={selectedBlock}
               onUpdateBlock={updateBlock}

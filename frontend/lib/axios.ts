@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getCookie, deleteCookie } from 'cookies-next';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bento-backend-omega.vercel.app/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -16,8 +16,6 @@ apiClient.interceptors.request.use(
       const token = getCookie('authToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log("mmmmmmmmmmmmmil gya");
-        
       }
     }
     return config;

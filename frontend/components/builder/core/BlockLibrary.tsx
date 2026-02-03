@@ -50,19 +50,28 @@ interface DraggableBlockItemProps {
 }
 
 function DraggableBlockItem({ block, onAddBlock }: DraggableBlockItemProps) {
+  const [mounted, setMounted] = React.useState(false);
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `library-${block.type}`,
     data: { type: 'library-item', blockType: block.type },
   });
 
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // @ts-ignore - Dynamic icon lookup
   const Icon = Icons[block.icon] || Icons.Box;
+
+  // Don't apply dnd attributes until mounted to avoid SSR hydration mismatch
+  const dndAttributes = mounted ? attributes : {};
+  const dndListeners = mounted ? listeners : {};
 
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
+      {...dndAttributes}
+      {...dndListeners}
       onClick={() => onAddBlock(block.type)}
       className={`group flex items-center gap-3 py-2 border-0 rounded-xl cursor-grab active:cursor-grabbing hover:shadow-md transition-all duration-200 box-border ${
         isDragging ? 'opacity-50 scale-95' : ''

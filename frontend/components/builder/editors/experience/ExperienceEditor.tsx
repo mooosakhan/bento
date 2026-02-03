@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Toggle } from '@/components/ui/Toggle';
+import { ColorPicker } from '@/components/ui/ColorPicker';
 import { Plus, Trash2, GripVertical, Eye, EyeOff, Image as ImageIcon, Info } from 'lucide-react';
 
 interface ExperienceEditorProps {
@@ -47,7 +48,7 @@ function SimpleChipLogoEditor({
         value={logoUrl}
         onChange={(e) => onLogoChange(e.target.value)}
         placeholder="Enter logo URL (https://...) or paste SVG code (<svg>...</svg>)"
-        rows={6}
+        rows={4}
         className="text-sm font-mono"
       />
     </div>
@@ -347,10 +348,12 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
   };
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium dark:text-neutral-300">
-        Experience
-      </label>
+    <div className="space-y-4">
+      {/* ===== EXPERIENCE LIST ===== */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold text-neutral-900 dark:text-white uppercase tracking-wide">
+          Experience
+        </h3>
 
       <div className="space-y-4 overflow-visible scrollbar-light scrollbar-dark">
         {items.map((item, index) => (
@@ -435,28 +438,13 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
                         )}
                       </div>
                       <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2 mb-1">
-                          <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                            Background Color
-                          </label>
-                          <input
-                            type="checkbox"
-                            checked={item.logoBgColor === 'none'}
-                            onChange={e => updateItem(index, { logoBgColor: e.target.checked ? 'none' : '#ffffff' })}
-                            className="ml-2"
-                            id={`logo-bg-none-${index}`}
-                          />
-                          <label htmlFor={`logo-bg-none-${index}`} className="text-xs ml-1 select-none cursor-pointer">None</label>
-                        </div>
-                        <div>
-                          <Input
-                            type="color"
-                            value={item.logoBgColor && item.logoBgColor !== 'none' ? item.logoBgColor : '#ffffff'}
-                            onChange={(e) => updateItem(index, { logoBgColor: e.target.value })}
-                            className="h-8"
-                            disabled={item.logoBgColor === 'none'}
-                          />
-                        </div>
+                        <ColorPicker
+                          label="Background Color"
+                          value={item.logoBgColor && item.logoBgColor !== 'none' ? item.logoBgColor : '#ffffff'}
+                          onChange={(color) => updateItem(index, { logoBgColor: color })}
+                          showTransparent={true}
+                        />
+                        
                         <div>
                           <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                             Roundness: {item.logoRoundness || 16}%
@@ -637,6 +625,7 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
         <Plus className="w-4 h-4 mr-2" />
         Add Experience
       </Button>
+      </div>
     </div>
   );
 }

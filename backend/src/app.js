@@ -5,6 +5,7 @@ import morgan from "morgan";
 
 import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import { notFound, errorHandler } from "./middleware/error.middleware.js";
 
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req, res) =>
 
 app.use("/api/auth", authRoutes);
 app.use("/api", profileRoutes); // includes /profiles and /u/:handle
+app.use("/api/admin", adminRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
