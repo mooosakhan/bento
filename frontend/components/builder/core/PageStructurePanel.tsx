@@ -21,6 +21,9 @@ interface PageStructurePanelProps {
   selectedBlockId: string | null;
   onSelectBlock: (blockId: string) => void;
   onUpdateBlock: (blockId: string, updates: Partial<Block>) => void;
+  sectionGap?: number;
+  portfolioWidth?: number;
+  onUpdateSettings?: (settings: { sectionGap?: number; portfolioWidth?: number }) => void;
 }
 
 // Map block types to icons
@@ -38,7 +41,15 @@ const blockIcons: Record<string, React.ReactNode> = {
   projects: <FolderOpen className="w-4 h-4" />,
 };
 
-export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onUpdateBlock }: PageStructurePanelProps) {
+export function PageStructurePanel({ 
+  blocks, 
+  selectedBlockId, 
+  onSelectBlock, 
+  onUpdateBlock,
+  sectionGap = 16,
+  portfolioWidth = 0,
+  onUpdateSettings
+}: PageStructurePanelProps) {
   return (
     <div className="bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden">
       <div className="px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
@@ -49,6 +60,50 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
           </h3>
         </div>
       </div>
+
+      {/* Global Settings */}
+      {onUpdateSettings && (
+        <div className="px-3 py-3 bg-neutral-50 dark:bg-neutral-800/50 border-b border-neutral-200 dark:border-neutral-700 space-y-3">
+          <div>
+            <label className="text-xs font-medium text-neutral-600 dark:text-neutral-400 block mb-1.5">
+              Portfolio Width
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min="0"
+                max="1400"
+                step="10"
+                value={portfolioWidth}
+                onChange={(e) => onUpdateSettings({ portfolioWidth: Number(e.target.value) })}
+                className="flex-1 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neutral-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+              />
+              <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 w-16 text-right">
+                {portfolioWidth === 0 ? 'Auto' : `${portfolioWidth}px`}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-neutral-600 dark:text-neutral-400 block mb-1.5">
+              Default Block Gap
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min="0"
+                max="80"
+                value={sectionGap}
+                onChange={(e) => onUpdateSettings({ sectionGap: Number(e.target.value) })}
+                className="flex-1 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neutral-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+              />
+              <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 w-10 text-right">
+                {sectionGap}px
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
         {blocks.length === 0 ? (
@@ -116,13 +171,12 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
                   )}
                 </button>
                 
-                {/* Gap control for each block (except first) */}
-                {index > 0 && (
-                  <div className="px-3 py-2 bg-neutral-50 dark:bg-neutral-800/50 border-t dark:border-neutral-800">
-                    <div className="flex items-center gap-2">
-                      <label className="text-xs text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
-                        Gap above:
-                      </label>
+                {/* Gap control for each block */}
+                <div className="px-3 py-2 bg-neutral-50 dark:bg-neutral-800/50 border-t dark:border-neutral-800">
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
+                      {index === 0 ? 'Top gap:' : 'Gap above:'}
+                    </label>
                       <input
                         type="range"
                         min="0"
@@ -140,7 +194,6 @@ export function PageStructurePanel({ blocks, selectedBlockId, onSelectBlock, onU
                       </span>
                     </div>
                   </div>
-                )}
               </div>
             );
           })

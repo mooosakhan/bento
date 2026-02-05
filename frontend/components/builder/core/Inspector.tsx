@@ -1,7 +1,7 @@
 import React from 'react';
 import { Block, Profile } from '@/types';
 import { getBlockDefinition } from '@/lib/blockRegistry';
-import { X } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 import { SkillsEditor } from '../editors/skills/SkillsEditor';
 import { ExperienceEditor } from '../editors/experience/ExperienceEditor';
 import { ProjectsEditor } from '../editors/projects/ProjectsEditor';
@@ -51,40 +51,22 @@ export function Inspector({
               window.dispatchEvent(event);
             }}
             onUpdateBlock={onUpdateBlockMeta}
+            sectionGap={profile.sectionGap}
+            portfolioWidth={profile.portfolioWidth}
+            onUpdateSettings={(settings) => {
+              onUpdateProfile({ 
+                ...profile, 
+                ...(settings.sectionGap !== undefined && { sectionGap: settings.sectionGap }),
+                ...(settings.portfolioWidth !== undefined && { portfolioWidth: settings.portfolioWidth })
+              });
+            }}
           />
         </div>
 
-        {/* Section Gap Control */}
-        <div className="p-4 border-t z-99 border-neutral-200 dark:border-[#2a2b2a] dark:bg-[#111010]">
-          <div className="bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-700 p-4">
-            <h3 className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-3">
-              Page Settings
-            </h3>
-
-            <div>
-              <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-2">
-                Section Gap
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="range"
-                  min="0"
-                  max="80"
-                  value={profile.sectionGap || 16}
-                  onChange={(e) => onUpdateProfile({ ...profile, sectionGap: Number(e.target.value) })}
-                  className="flex-1 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-neutral-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-                />
-                <span className="text-xs font-mono text-neutral-600 dark:text-neutral-400 w-12 text-right">
-                  {profile.sectionGap || 0}px
-                </span>
-              </div>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1.5">
-                Space between all sections
-              </p>
-            </div>
-          </div>
-        </div>
-
+        {/* Empty state message */}
+        {/* <div className="px-4 pt-8 text-center text-neutral-400 dark:text-neutral-500">
+          <p className="text-sm">Select a block to edit its properties</p>
+        </div> */}
       </div>
     );
   }
@@ -105,16 +87,29 @@ export function Inspector({
           <div className='flex gap-2 justify-between w-full'>
             <div>
               <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
-                {definition.label} Block
+                {definition.label}
               </h3>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
                 Edit properties below
               </p>
             </div>
           </div>
-          <Button className='bg-neutral-900 dark:bg-[#333333] rounded-md mt-1 cursor-pointer h-7 w-7 text-white hover:bg-[#333333]   font-bold transition-colors flex justify-center items-center' onClick={onDeselectBlock}>
-            <X className='w-7 h-7 mx-1 text-neutral-400 hover:text-neutral-100' />
-          </Button>
+          <div className="flex items-center gap-">
+            <Button
+              className="col-span-1 h-7.5 p-0 flex items-center justify-center bg-transparent text-neutral-400 opacity-50 hover:opacity-100 hover:text-red-500 transition hover:bg-transparent"
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this block?')) {
+                  onDeleteBlock(selectedBlock.id);
+                }
+              }}
+              title="Delete block"
+            >
+              <Trash2 className='w-4 h-4' />
+            </Button>
+            <Button className='bg-neutral-900 dark:bg-[#333333] rounded-md cursor-pointer h-7 w-7 text-white hover:bg-[#333333] font-bold transition-colors flex justify-center items-center' onClick={onDeselectBlock}>
+              <X className='w-7 h-7 mx-1 text-neutral-400 hover:text-neutral-100' />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -124,7 +119,7 @@ export function Inspector({
         {selectedBlock.type === 'header' && (
           <HeaderEditor selectedBlock={selectedBlock} onUpdateBlock={onUpdateBlock} />
         )}
-        
+
         {selectedBlock.type === 'navbar' && (
           <NavbarEditor selectedBlock={selectedBlock} onUpdateBlock={onUpdateBlock} />
         )}
@@ -134,23 +129,56 @@ export function Inspector({
         )}
 
         {selectedBlock.type === 'skills' && (
-          <SkillsEditor 
-            skills={selectedBlock.props.skills || []} 
-            onChange={(skills) => handlePropChange('skills', skills)} 
+          <SkillsEditor
+            skills={selectedBlock.props.skills || []}
+            onChange={(skills) => handlePropChange('skills', skills)}
           />
         )}
 
         {selectedBlock.type === 'experience' && (
-          <ExperienceEditor 
-            items={selectedBlock.props.experience || []} 
-            onChange={(experience) => handlePropChange('experience', experience)} 
+          <ExperienceEditor
+            items={selectedBlock.props.items || []}
+            onChange={(items) => handlePropChange('items', items)}
+            showBorder={selectedBlock.props.showBorder}
+            borderThickness={selectedBlock.props.borderThickness}
+            borderRadius={selectedBlock.props.borderRadius}
+            showShadow={selectedBlock.props.showShadow}
+            paddingX={selectedBlock.props.paddingX}
+            paddingY={selectedBlock.props.paddingY}
+            contentAlignment={selectedBlock.props.contentAlignment}
+            showLogo={selectedBlock.props.showLogo}
+            showCompany={selectedBlock.props.showCompany}
+            showRole={selectedBlock.props.showRole}
+            showDate={selectedBlock.props.showDate}
+            showDescription={selectedBlock.props.showDescription}
+            showChips={selectedBlock.props.showChips}
+            onPropChange={handlePropChange}
           />
         )}
 
         {selectedBlock.type === 'projects' && (
-          <ProjectsEditor 
-            projects={selectedBlock.props.projects || []} 
-            onChange={(projects) => handlePropChange('projects', projects)} 
+          <ProjectsEditor
+            projects={selectedBlock.props.projects || []}
+            onChange={(projects) => handlePropChange('projects', projects)}
+            showBorder={selectedBlock.props.showBorder}
+            borderThickness={selectedBlock.props.borderThickness}
+            borderRadius={selectedBlock.props.borderRadius}
+            borderColor={selectedBlock.props.borderColor}
+            borderOpacity={selectedBlock.props.borderOpacity}
+            showShadow={selectedBlock.props.showShadow}
+            layout={selectedBlock.props.layout}
+            paddingX={selectedBlock.props.paddingX}
+            paddingY={selectedBlock.props.paddingY}
+            buttonRoundness={selectedBlock.props.buttonRoundness}
+            buttonSize={selectedBlock.props.buttonSize}
+            projectButtonText={selectedBlock.props.projectButtonText}
+            codeButtonText={selectedBlock.props.codeButtonText}
+            showButtonIcon={selectedBlock.props.showButtonIcon}
+            showIconFirst={selectedBlock.props.showIconFirst}
+            chipsShowBorder={selectedBlock.props.chipsShowBorder}
+            chipsBorderRadius={selectedBlock.props.chipsBorderRadius}
+            chipsBorderOpacity={selectedBlock.props.chipsBorderOpacity}
+            onPropChange={handlePropChange}
           />
         )}
 

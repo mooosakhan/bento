@@ -84,6 +84,7 @@ export default function BuilderPage() {
     },
     blocks: [],
     sectionGap: 16,
+    portfolioWidth: 0,
   });
 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -270,7 +271,7 @@ export default function BuilderPage() {
     }, 900);
 
     return () => clearTimeout(timer);
-  }, [profile.blocks, profile.sectionGap, profile.theme.mode]);
+  }, [profile.blocks, profile.sectionGap, profile.portfolioWidth, profile.theme.mode]);
 
   const undo = () => {
     if (historyIndex > 0) {
@@ -520,6 +521,7 @@ export default function BuilderPage() {
               viewMode={viewMode}
               cursorMode={cursorMode}
               sectionGap={profile.sectionGap}
+              portfolioWidth={profile.portfolioWidth}
             />
           </main>
 

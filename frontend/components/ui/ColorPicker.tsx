@@ -32,7 +32,7 @@ export function ColorPicker({ value, onChange, label, showTransparent = true }: 
           {label}
         </label>
       )}
-      
+
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -42,7 +42,7 @@ export function ColorPicker({ value, onChange, label, showTransparent = true }: 
             className="w-6 h-6 rounded border border-neutral-300 dark:border-neutral-600"
             style={{
               backgroundColor: value === 'transparent' ? 'transparent' : value,
-              backgroundImage: value === 'transparent' 
+              backgroundImage: value === 'transparent'
                 ? 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)'
                 : undefined,
               backgroundSize: value === 'transparent' ? '8px 8px' : undefined,
@@ -68,10 +68,9 @@ export function ColorPicker({ value, onChange, label, showTransparent = true }: 
                     <button
                       key={color}
                       onClick={() => handleColorSelect(color)}
-                      className="w-8 h-8 rounded border-2 transition-transform hover:scale-110"
+                      className={`w-7 h-7.5 rounded border transition-transform hover:border-[#d6cccc] focus:outline-none ${value === color ? 'border-[#ccc2c2] scale-110' : ''}`}
                       style={{
                         backgroundColor: color,
-                        borderColor: value === color ? '#3b82f6' : '#e5e7eb',
                       }}
                       title={color}
                     />
@@ -80,19 +79,20 @@ export function ColorPicker({ value, onChange, label, showTransparent = true }: 
 
                 {/* Custom Color Input */}
                 <div className="space-y-2">
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-1 items-center">
                     <input
                       type="color"
                       value={customColor === 'transparent' ? '#ffffff' : customColor}
                       onChange={(e) => setCustomColor(e.target.value)}
-                      className="w-10 h-10 rounded border border-neutral-300 dark:border-neutral-600 cursor-pointer"
+                      className="w-1/6 h-9 rounded-xl cursor-pointer bg-transparent" // Removed border and added rounded-full
                     />
+
                     <input
                       type="text"
                       value={customColor}
                       onChange={(e) => setCustomColor(e.target.value)}
                       placeholder="#000000"
-                      className="flex-1 px-2 py-1.5 text-xs border border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-400 font-mono"
+                      className="flex-1 px-2 py-1.5 w-4/5 text-xs border border-neutral-300 dark:border-neutral-600 rounded bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-neutral-400 font-mono"
                     />
                   </div>
                   <Button

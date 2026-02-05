@@ -51,7 +51,7 @@ export function SortableBlockItem({ block, isSelected, onSelect, cursorMode = 's
         isSelected 
           ? '' 
           : cursorMode === 'select' 
-            ? 'hover:ring-2 hover:ring-neutral-300 dark:hover:ring-neutral-600 hover:ring-offset-2 dark:hover:ring-offset-neutral-500'
+            ? 'hover:ring-2 hover:ring-black/12 dark:hover:ring-black'
             : ''
       } ${isDragging ? 'opacity-50 z-50' : ''}`}
     >

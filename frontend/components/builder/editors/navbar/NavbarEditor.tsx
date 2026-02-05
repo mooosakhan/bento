@@ -3,6 +3,7 @@ import { Block, NavbarNavItem } from '@/types';
 import { Plus, Trash2, Pencil, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
+import { Toggle } from "@/components/ui/Toggle";
 import { ColorPicker } from "@/components/ui/ColorPicker";
 import { AvatarPickerModal } from '../../avatar/AvatarPickerModal';
 
@@ -110,8 +111,14 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
           Logo
         </h3>
 
+        <Toggle
+          label="Show Logo"
+          checked={selectedBlock.props.showLogo ?? true}
+          onChange={(checked: boolean) => handlePropChange('showLogo', checked)}
+        />
+
         {/* Logo Preview */}
-        {selectedBlock.props.logoUrl ? (
+        {(selectedBlock.props.showLogo ?? true) && selectedBlock.props.logoUrl ? (
           <div className="space-y-2">
             <button
               onClick={() => setShowLogoPicker(true)}
@@ -131,7 +138,7 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
               </div>
             </button>
 
-              
+
           </div>
         ) : (
           <Button
@@ -144,7 +151,7 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
           </Button>
         )}
 
-        {selectedBlock.props.logoUrl && (
+        {(selectedBlock.props.showLogo ?? true) && selectedBlock.props.logoUrl && (
           <>
             <ColorPicker
               label="Background Color"
@@ -190,7 +197,7 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
       <div className="border-t border-neutral-200 dark:border-neutral-800"></div>
 
       {/* ===== NAVIGATION ITEMS ===== */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex justify-between items-center">
           <h3 className="text-xs font-semibold text-neutral-800 dark:text-white uppercase tracking-wide">
             Navigation Items
@@ -201,8 +208,8 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
         </div>
 
         {isNavItemsVisible && (
-          <div>
-            <div className="grid grid-cols-14 items-center pb-2">
+          <div className='space-y-2'>
+            <div className="grid grid-cols-14 items-center ">
               <h4 className="col-span-13 text-xs font-medium text-neutral-700 dark:text-neutral-100">
                 Navs
               </h4>
@@ -251,8 +258,26 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
                 </div>
               ))}
             </div>
+            <div>
+              <label className="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
+                <span>Gap</span>
+                <span className="font-medium text-neutral-900 dark:text-white">{selectedBlock.props?.itemsGap ?? 16}px</span>
+              </label>
+              <input
+                type="range"
+                min={0}
+                max={48}
+                step={4}
+                value={selectedBlock.props?.itemsGap ?? 16}
+                onChange={(e) =>
+                  update({ itemsGap: parseInt(e.target.value) })
+                }
+                className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded appearance-none cursor-pointer accent-neutral-900 dark:accent-white"
+              />
+            </div>
           </div>
         )}
+
       </div>
 
 
@@ -265,6 +290,12 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
         <h3 className="text-xs font-semibold text-neutral-800 dark:text-white uppercase tracking-wide">
           Layout
         </h3>
+
+        <Toggle
+          label="Show Search"
+          checked={selectedBlock.props.showSearch ?? true}
+          onChange={(checked: boolean) => handlePropChange('showSearch', checked)}
+        />
 
         <div className="flex flex-col space-y-3">
           <div>
@@ -286,23 +317,7 @@ export const NavbarEditor: React.FC<NavbarEditorProps> = ({ selectedBlock, onUpd
           </div>
         </div>
 
-        <div>
-          <label className="flex justify-between text-xs text-neutral-600 dark:text-neutral-400 mb-1">
-            <span>Items Gap</span>
-            <span className="font-medium text-neutral-900 dark:text-white">{selectedBlock.props?.itemsGap ?? 16}px</span>
-          </label>
-          <input
-            type="range"
-            min={0}
-            max={48}
-            step={4}
-            value={selectedBlock.props?.itemsGap ?? 16}
-            onChange={(e) =>
-              update({ itemsGap: parseInt(e.target.value) })
-            }
-            className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded appearance-none cursor-pointer accent-neutral-900 dark:accent-white"
-          />
-        </div>
+
       </div>
 
       {/* Divider */}

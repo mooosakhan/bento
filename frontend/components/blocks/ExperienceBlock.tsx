@@ -209,6 +209,28 @@ export function ExperienceBlockRenderer({ props , theme }: ExperienceBlockRender
     );
   }
 
+  // Default values
+  const showBorder = props.showBorder ?? true;
+  const borderThickness = props.borderThickness ?? 1;
+  const borderRadius = props.borderRadius ?? 16;
+  const showShadow = props.showShadow ?? false;
+  const paddingX = props.paddingX ?? 24;
+  const paddingY = props.paddingY ?? 24;
+  const contentAlignment = props.contentAlignment || 'left';
+  const showLogo = props.showLogo ?? true;
+  const showCompany = props.showCompany ?? true;
+  const showRole = props.showRole ?? true;
+  const showDate = props.showDate ?? true;
+  const showDescription = props.showDescription ?? true;
+  const showChips = props.showChips ?? true;
+
+  // Alignment classes
+  const alignmentClasses = {
+    left: 'items-start text-left',
+    center: 'items-center text-center flex-col',
+    right: 'items-end text-right'
+  };
+
   return (
     <div className="space-y-4">
       {props.items.map((item, index) => {
@@ -222,66 +244,89 @@ export function ExperienceBlockRenderer({ props , theme }: ExperienceBlockRender
         return (
           <div 
             key={index} 
-            className="rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+            className={`transition-shadow duration-200 ${showShadow ? 'shadow-md' : ''}`}
+            style={{
+              borderRadius: `${borderRadius}px`,
+              paddingLeft: `${paddingX}px`,
+              paddingRight: `${paddingX}px`,
+              paddingTop: `${paddingY}px`,
+              paddingBottom: `${paddingY}px`,
+              border: showBorder ? `${borderThickness}px solid rgba(0, 0, 0, 0.1)` : 'none',
+            }}
           >
-            <div className="flex items-start gap-4">
+            <div className={`flex  gap-4 ${alignmentClasses[contentAlignment]}`}>
               {/* Company Logo */}
-              <div 
-                className="w-12 h-12 flex items-center justify-center flex-shrink-0 "
-                style={{ 
-                  backgroundColor: item.companyLogo ? logoBgColor : 'transparent',
-                  borderRadius: `${logoRoundness}%`
-                }}
-              >
-                {item.companyLogo ? (
-                  isSvgLogo ? (
-                    <div 
-                      className="w-full h-full flex items-center justify-center"
-                      dangerouslySetInnerHTML={{ __html: item.companyLogo }}
-                    />
+              {showLogo && (
+                <div 
+                  className="w-12 h-12 flex items-center justify-center flex-shrink-0"
+                  style={{ 
+                    backgroundColor: item.companyLogo ? logoBgColor : 'transparent',
+                    borderRadius: `${logoRoundness}%`
+                  }}
+                >
+                  {item.companyLogo ? (
+                    isSvgLogo ? (
+                      <div 
+                        className="w-full h-full flex items-center justify-center"
+                        dangerouslySetInnerHTML={{ __html: item.companyLogo }}
+                      />
+                    ) : (
+                      <img 
+                        src={item.companyLogo} 
+                        alt={item.company}
+                        style={{
+                           borderRadius: `${logoRoundness}%`
+                        }}
+                        className="w-full h-full object-cover"
+                      />
+                    )
                   ) : (
-                    <img 
-                      src={item.companyLogo} 
-                      alt={item.company}
-                      className="w-full h-full object-cover"
-                    />
-                  )
-                ) : (
-                  <div className="w-full h-full rounded-xl bg-neutral-100 dark:bg-[#262626] flex items-center justify-center">
-                    <Briefcase className="w-6 h-6 text-neutral-600 dark:text-neutral-400" />
-                  </div>
-                )}
-              </div>
+                    <div className="w-full h-full rounded-xl bg-neutral-100 dark:bg-[#262626] flex items-center justify-center">
+                      <Briefcase className="w-6 h-6 text-neutral-600 dark:text-neutral-400" />
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* Content */}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
-                  {item.role}
-                </h3>
-                <p 
-                  className={`text-neutral-700 dark:text-neutral-300 font-medium ${
-                    item.blurCompanyTitle ? 'blur-sm hover:blur-none transition-all duration-300' : ''
-                  }`}
-                >
-                  {item.company}
-                </p>
-                <div className="flex items-center gap-1.5 mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                  <Calendar className="w-4 h-4" />
-                  <span>
-                    {item.startDate} - {item.endDate || 'Present'}
-                  </span>
-                </div>
+              <div className={`flex-1 min-w-0 flex flex-col ${alignmentClasses[contentAlignment]}`}>
+                {showRole && (
+                  <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
+                    {item.role}
+                  </h3>
+                )}
+                {showCompany && (
+                  <p 
+                    className={`text-neutral-700 dark:text-neutral-300 font-medium ${
+                      item.blurCompanyTitle ? 'blur-sm hover:blur-none transition-all duration-300' : ''
+                    }`}
+                  >
+                    {item.company}
+                  </p>
+                )}
+                {showDate && (
+                  <div className={`flex items-center gap-1.5 mt-2 text-sm text-neutral-500 dark:text-neutral-400 ${
+                    contentAlignment === 'center' ? 'justify-center' : contentAlignment === 'right' ? 'justify-end' : ''
+                  }`}>
+                    <Calendar className="w-4 h-4" />
+                    <span>
+                      {item.startDate} - {item.endDate || 'Present'}
+                    </span>
+                  </div>
+                )}
                 
                 {/* Description with Markdown support */}
-                {item.description && (
+                {showDescription && item.description && (
                   <div className="mt-3 text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-1">
                     {parseDescriptionText(item.description, chipLogos)}
                   </div>
                 )}
                 
                 {/* Chips */}
-                {item.chips && item.chips.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-3">
+                {showChips && item.chips && item.chips.length > 0 && (
+                  <div className={`flex flex-wrap gap-2 mt-3 ${
+                    contentAlignment === 'center' ? 'justify-center' : contentAlignment === 'right' ? 'justify-end' : ''
+                  }`}>
                     {item.chips.map((chip, chipIndex) => {
                       const logoData = chipLogos[chip];
                       const isChipSvg = logoData && logoData.trim().startsWith('<svg');
@@ -289,7 +334,7 @@ export function ExperienceBlockRenderer({ props , theme }: ExperienceBlockRender
                       return (
                         <span
                           key={chipIndex}
-                          className="chip-inner-shadow inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-dotted border-neutral-400 dark:border-white/30 bg-neutral-50 dark:bg-white/10 text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+                          className=" inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-1 border-dashed border-neutral-400 dark:border-white/30 dark:bg-none text-sm font-semibold text-neutral-700 dark:text-neutral-300"
                         >
                           {logoData && (
                             isChipSvg ? (

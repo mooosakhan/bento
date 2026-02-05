@@ -57,6 +57,7 @@ function normalizeApiToUiProfile(api: ApiProfileResponse): UiProfile {
     },
     blocks: Array.isArray(api.blocks) ? api.blocks : [],
     sectionGap: api.layout?.page?.sectionGap ?? 16, // ✅ comes from layout.page.sectionGap
+    portfolioWidth: api.layout?.page?.portfolioWidth ?? 0, // ✅ portfolio width setting
   };
 }
 
@@ -114,9 +115,12 @@ export default function ProfilePage() {
     if (!profile) return null;
 
     return (
-      <div className="space-y-4">
+      <div className="space-y-0">
         {profile.blocks.map((block) => (
-          <div key={block.id} style={{ marginTop: block.gapBefore ? `${block.gapBefore}px` : '0' }}>
+          <div 
+            key={block.id} 
+            style={{ marginTop: `${block.gapBefore ?? profile.sectionGap ?? 16}px` }}
+          >
             <BlockRenderer block={block} theme={profile.theme} />
           </div>
         ))}
@@ -171,9 +175,17 @@ export default function ProfilePage() {
   // -----------------------------
   // Render
   // -----------------------------
+  const portfolioWidth = profile?.portfolioWidth ?? 0;
+  const containerStyle = portfolioWidth > 0 
+    ? { width: `${portfolioWidth}px`, maxWidth: '100%' } 
+    : {};
+
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-[#0b0a0b]">
-      <div className="max-w-4xl mx-auto">
+      <div 
+        className={`mx-auto ${portfolioWidth > 0 ? '' : 'max-w-4xl'}`}
+        style={containerStyle}
+      >
         {/* small info bar */}
         {/* <div className="mb-4 flex items-center justify-between">
           <div className="text-xs text-neutral-500 dark:text-neutral-400">

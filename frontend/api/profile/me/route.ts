@@ -25,6 +25,8 @@ export async function updateMyProfile(
   payload: Partial<ProfileDoc>,
 ): Promise<ProfileDoc> {
   try {
+    console.log('📤 Frontend payload received:', payload);
+    
     // Transform frontend structure to backend structure
     const backendPayload: any = {};
     
@@ -55,12 +57,20 @@ export async function updateMyProfile(
       };
     }
     
-    // Map layout/sectionGap
-    if (payload.sectionGap !== undefined) {
+    // Map layout/sectionGap/portfolioWidth
+    if (payload.sectionGap !== undefined || payload.portfolioWidth !== undefined) {
       backendPayload.layout = backendPayload.layout || {};
       backendPayload.layout.page = backendPayload.layout.page || {};
-      backendPayload.layout.page.sectionGap = payload.sectionGap;
+      if (payload.sectionGap !== undefined) {
+        backendPayload.layout.page.sectionGap = payload.sectionGap;
+      }
+      if (payload.portfolioWidth !== undefined) {
+        backendPayload.layout.page.portfolioWidth = payload.portfolioWidth;
+      }
     }
+    
+    console.log('📤 Backend payload being sent:', backendPayload);
+    console.log('📤 Layout object:', backendPayload.layout);
     
     const response = await apiClient.put(`/profiles/me`, backendPayload, {
       requestAuth: true,

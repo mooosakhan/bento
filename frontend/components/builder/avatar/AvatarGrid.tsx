@@ -6,7 +6,7 @@ interface AvatarGridProps {
     onSelect: (avatarPath: string) => void;
 }
 
-type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others' | 'ramx' | 'adventurer';
+type CategoryType = 'bento' | 'lorelei' | 'notionists' | 'others' | 'ramx' | 'adventurer' | 'professions';
 
 const AVATAR_CATEGORY_KEY = 'avatar-selected-category';
 
@@ -32,7 +32,12 @@ const AVATAR_PRESETS = {
         id: `adventurer-${i + 1}`,
         url: `https://api.dicebear.com/7.x/adventurer/svg?seed=adventurer${i + 1}`,
         alt: `Adventurer Avatar ${i + 1}`,
-    })),    
+    })),
+    professions: Array.from({ length: 24 }, (_, i) => ({
+        id: `professions-${i + 1}`,
+        url: `/avatars/professions/3d-illustration-${i + 1}.png`,
+        alt: `Professions Avatar ${i + 1}`,
+    })),
     others: [
         ...Array.from({ length: 20 }, (_, i) => ({
             id: `croodles-${i + 1}`,
@@ -57,7 +62,7 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
     const [selectedCategory, setSelectedCategory] = useState<CategoryType>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem(AVATAR_CATEGORY_KEY);
-            if (saved && (saved === 'bento' || saved === 'lorelei' || saved === 'notionists' || saved === 'others' || saved === 'ramx')) {
+            if (saved && (saved === 'bento' || saved === 'lorelei' || saved === 'notionists' || saved === 'others' || saved === 'ramx' || saved === 'professions')) {
                 return saved as CategoryType;
             }
         }
@@ -102,7 +107,7 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                 >
                     Notionists
                 </button>
-                  <button
+                <button
                     onClick={() => setSelectedCategory('adventurer')}
                     className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'adventurer'
                         ? 'bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white'
@@ -122,6 +127,15 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                     Bento
                 </button>
                 <button
+                    onClick={() => setSelectedCategory('professions')}
+                    className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'professions'
+                        ? 'bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                        }`}
+                >
+                    Professions
+                </button>
+                <button
                     onClick={() => setSelectedCategory('others')}
                     className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'others'
                         ? 'bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white'
@@ -130,7 +144,7 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                 >
                     Others
                 </button>
-                  <button
+                <button
                     onClick={() => setSelectedCategory('ramx')}
                     className={`flex-1 px-3 py-2 rounded-full font-medium transition-all text-sm ${selectedCategory === 'ramx'
                         ? 'bg-white dark:bg-neutral-800 shadow-sm text-neutral-900 dark:text-white'
@@ -156,7 +170,7 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                                 }`}
                         >
                             {/* Avatar Image */}
-                            <div className="absolute inset-2 rounded-full overflow-hidden bg-neutral-50 dark:bg-neutral-700">
+                            <div className="absolute inset-2 overflow-hidden ">
                                 <img
                                     src={avatar.url}
                                     alt={avatar.alt}
@@ -201,6 +215,11 @@ export function AvatarGrid({ currentAvatar, onSelect }: AvatarGridProps) {
                     {selectedCategory === 'ramx' && (
                         <>
                             <strong>Ramx Style:</strong> A unique avatar representing Ramx
+                        </>
+                    )}
+                    {selectedCategory === 'professions' && (
+                        <>
+                            <strong>Professions Style:</strong> A unique set of 3D illustrated avatars representing various professions
                         </>
                     )}
                 </p>

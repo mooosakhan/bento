@@ -7,11 +7,6 @@ import { Toggle } from '@/components/ui/Toggle';
 import { ColorPicker } from '@/components/ui/ColorPicker';
 import { Plus, Trash2, GripVertical, Eye, EyeOff, Image as ImageIcon, Info } from 'lucide-react';
 
-interface ExperienceEditorProps {
-  items: ExperienceItem[];
-  onChange: (items: ExperienceItem[]) => void;
-}
-
 // Simple chip logo editor component
 function SimpleChipLogoEditor({
   chipName,
@@ -58,6 +53,21 @@ function SimpleChipLogoEditor({
 interface ExperienceEditorProps {
   items: ExperienceItem[];
   onChange: (items: ExperienceItem[]) => void;
+  // Block-level controls
+  showBorder?: boolean;
+  borderThickness?: number;
+  borderRadius?: number;
+  showShadow?: boolean;
+  paddingX?: number;
+  paddingY?: number;
+  contentAlignment?: 'left' | 'center' | 'right';
+  showLogo?: boolean;
+  showCompany?: boolean;
+  showRole?: boolean;
+  showDate?: boolean;
+  showDescription?: boolean;
+  showChips?: boolean;
+  onPropChange?: (key: string, value: any) => void;
 }
 
 // Parse description text for markdown and chips (for preview)
@@ -253,7 +263,24 @@ function parseInlineMarkdown(text: string, chipLogos: { [key: string]: string } 
   return elements.length > 0 ? <>{elements}</> : text;
 }
 
-export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
+export function ExperienceEditor({
+  items,
+  onChange,
+  showBorder,
+  borderThickness,
+  borderRadius,
+  showShadow,
+  paddingX,
+  paddingY,
+  contentAlignment,
+  showLogo,
+  showCompany,
+  showRole,
+  showDate,
+  showDescription,
+  showChips,
+  onPropChange
+}: ExperienceEditorProps) {
   const [previewMode, setPreviewMode] = useState<{ [key: number]: boolean }>({});
   const [infoVisible, setInfoVisible] = useState(false);
   const infoHideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -349,198 +376,366 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
 
   return (
     <div className="space-y-4">
-      {/* ===== EXPERIENCE LIST ===== */}
-      <div className="space-y-3">
+      {/* ===== BLOCK CUSTOMIZATION ===== */}
+      <div className="space-y-3 pb-4 border-b border-neutral-200 dark:border-neutral-700">
         <h3 className="text-xs font-semibold text-neutral-900 dark:text-white uppercase tracking-wide">
-          Experience
+          Block Customization
         </h3>
 
-      <div className="space-y-4 overflow-visible scrollbar-light scrollbar-dark">
-        {items.map((item, index) => (
-          <div key={index} className="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-4 space-y-3">
-            <div className="flex items-start flex-col gap-2">
-              <div className='flex items-center justify-between w-full'>
-                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-                  # {index + 1}
-                </label>
-                <Button
-                  onClick={() => removeItem(index)}
-                  className="p-2 text-neutral-400 hover:text-red-600 transition-colors bg-none self-end"
-                  variant="ghost"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+        {/* Visibility Toggles */}
+        <div className="space-y-2 rounded-lg  py-1">
+          <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2">Show/Hide Elements</p>
+          <div className="grid grid-cols-1 gap-2">
+            <Toggle
+              checked={showLogo ?? true}
+              onChange={(checked) => onPropChange?.('showLogo', checked)}
+              label="Logo"
+            />
+            <Toggle
+              checked={showRole ?? true}
+              onChange={(checked) => onPropChange?.('showRole', checked)}
+              label="Role"
+            />
+            <Toggle
+              checked={showCompany ?? true}
+              onChange={(checked) => onPropChange?.('showCompany', checked)}
+              label="Company"
+            />
+            <Toggle
+              checked={showDate ?? true}
+              onChange={(checked) => onPropChange?.('showDate', checked)}
+              label="Date"
+            />
+            <Toggle
+              checked={showDescription ?? true}
+              onChange={(checked) => onPropChange?.('showDescription', checked)}
+              label="Description"
+            />
+            <Toggle
+              checked={showChips ?? true}
+              onChange={(checked) => onPropChange?.('showChips', checked)}
+              label="Skills/Chips"
+            />
+          </div>
+        </div>
+
+        {/* Content Alignment */}
+        <div className="space-y-2">
+          <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+            Content Alignment
+          </label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => onPropChange?.('contentAlignment', 'left')}
+              className={`flex-1 px-3 py-2 text-sm rounded-md border transition-colors ${(contentAlignment || 'left') === 'left'
+                ? 'bg-neutral-900 dark:bg-white text-white dark:text-black border-neutral-900 dark:border-white'
+                : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
+                }`}
+            >
+              Left
+            </button>
+            <button
+              onClick={() => onPropChange?.('contentAlignment', 'center')}
+              className={`flex-1 px-3 py-2 text-sm rounded-md border transition-colors ${(contentAlignment || 'left') === 'center'
+                ? 'bg-neutral-900 dark:bg-white text-white dark:text-black border-neutral-900 dark:border-white'
+                : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
+                }`}
+            >
+              Center
+            </button>
+            <button
+              onClick={() => onPropChange?.('contentAlignment', 'right')}
+              className={`flex-1 px-3 py-2 text-sm rounded-md border transition-colors ${(contentAlignment || 'left') === 'right'
+                ? 'bg-neutral-900 dark:bg-white text-white dark:text-black border-neutral-900 dark:border-white'
+                : 'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-700'
+                }`}
+            >
+              Right
+            </button>
+          </div>
+        </div>
+
+        {/* Border Controls */}
+        <div className="space-y-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg p-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Border</p>
+            <Toggle
+              checked={showBorder ?? true}
+              onChange={(checked) => onPropChange?.('showBorder', checked)}
+              label=""
+            />
+          </div>
+
+          {(showBorder ?? true) && (
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                    Thickness
+                  </label>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {borderThickness ?? 1}px
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="8"
+                  value={borderThickness ?? 1}
+                  onChange={(e) => onPropChange?.('borderThickness', parseInt(e.target.value))}
+                  className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer"
+                />
               </div>
 
-              <div className="flex-1 space-y-3">
-                {/* Role */}
-                <Input
-                  type="text"
-                  value={item.role}
-                  onChange={(e) => updateItem(index, { role: e.target.value })}
-                  placeholder="Role"
-                  className=''
-                  label='Role'
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                    Roundness
+                  </label>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {borderRadius ?? 16}px
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="32"
+                  value={borderRadius ?? 16}
+                  onChange={(e) => onPropChange?.('borderRadius', parseInt(e.target.value))}
+                  className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer"
                 />
+              </div>
+            </div>
+          )}
+        </div>
 
-                {/* Company Name with Blur Toggle */}
-                <div className="space-y-2">
+        {/* Shadow Control */}
+        <div className="space-y-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg p-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Shadow</p>
+            <Toggle
+              checked={showShadow ?? false}
+              onChange={(checked) => onPropChange?.('showShadow', checked)}
+              label=""
+            />
+          </div>
+        </div>
+
+        {/* Padding Controls */}
+        <div className="space-y-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg p-3">
+          <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Padding</p>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                Horizontal (X)
+              </label>
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                {paddingX ?? 24}px
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="64"
+              value={paddingX ?? 24}
+              onChange={(e) => onPropChange?.('paddingX', parseInt(e.target.value))}
+              className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                Vertical (Y)
+              </label>
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                {paddingY ?? 24}px
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="64"
+              value={paddingY ?? 24}
+              onChange={(e) => onPropChange?.('paddingY', parseInt(e.target.value))}
+              className="w-full  accent-neutral-900 dark:accent-neutral-100 cursor-pointer"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 overflow-hidden">
+        {/* ===================== EXPERIENCE ITEMS ===================== */}
+        <div className="space-y-4">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-900 dark:text-white">
+            Experience
+          </h3>
+
+          <div className="space-y-4">
+            {items.map((item, index) => {
+              const isPreview = !!previewMode[index];
+              return (
+                <div
+                  key={index}
+                  className="bg-neutral-50 dark:bg-neutral-900 rounded-lg p-4 space-y-4"
+                >
+                  {/* Experience Header */}
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
+                      # {index + 1}
+                    </label>
+                    <Button
+                      onClick={() => removeItem(index)}
+                      className="p-2 text-neutral-400 hover:text-red-600 transition-colors bg-none"
+                      variant="ghost"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  {/* Role */}
                   <Input
                     type="text"
-                    value={item.company}
-                    onChange={(e) => updateItem(index, { company: e.target.value })}
-                    placeholder="Company"
-                    className={item.blurCompanyTitle ? 'blur-sm' : ''}
-                    label="Company Name"
-                  />
-                  <Toggle
-                    checked={item.blurCompanyTitle || false}
-                    onChange={(checked) => updateItem(index, { blurCompanyTitle: checked })}
-                    label="Blur company name"
-                  />
-                </div>
-
-                {/* Company Logo */}
-                <div className="space-y-2">
-
-                  <Textarea
-                    value={item.companyLogo || ''}
-                    onChange={(e) => updateItem(index, { companyLogo: e.target.value })}
-                    placeholder="https://example.com/logo.png or <svg>...</svg>"
-                    rows={4}
-                    label="Company Logo URL or SVG"
+                    value={item.role}
+                    onChange={(e) => updateItem(index, { role: e.target.value })}
+                    placeholder="Role"
+                    label="Role"
                   />
 
-                  {/* Logo Preview */}
-                  {item.companyLogo && (
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-12 h-12 flex items-center justify-center "
+                  {/* Company Name */}
+                  <div className="space-y-2">
+                    <Input
+                      type="text"
+                      value={item.company}
+                      onChange={(e) => updateItem(index, { company: e.target.value })}
+                      placeholder="Company"
+                      className={item.blurCompanyTitle ? "blur-sm" : ""}
+                      label="Company Name"
+                    />
+                    <Toggle
+                      checked={item.blurCompanyTitle || false}
+                      onChange={(checked) => updateItem(index, { blurCompanyTitle: checked })}
+                      label="Blur company name"
+                    />
+                  </div>
 
-                      >
-                        {item.companyLogo.trim().startsWith('<svg') ? (
-                          <div
-                            className="w-full h-full flex items-center justify-center"
-                            dangerouslySetInnerHTML={{ __html: item.companyLogo }}
-
+                  {/* Company Logo */}
+                  <div className="space-y-2">
+                    <Textarea
+                      value={item.companyLogo || ""}
+                      onChange={(e) => updateItem(index, { companyLogo: e.target.value })}
+                      placeholder="Company Logo URL or SVG"
+                      rows={4}
+                      label="Company Logo URL or SVG"
+                    />
+                    {/* Logo Preview */}
+                    {item.companyLogo && (
+                      <div className="space-y-3">
+                        <div className="w-12 h-12 flex items-center justify-center">
+                          {item.companyLogo.trim().startsWith("<svg") ? (
+                            <div
+                              className="w-full h-full flex items-center justify-center"
+                              dangerouslySetInnerHTML={{ __html: item.companyLogo }}
+                            />
+                          ) : (
+                            <img
+                              style={{
+                                backgroundColor: item.logoBgColor || "#ffffff",
+                                borderRadius: `${item.logoRoundness || 16}%`,
+                              }}
+                              src={item.companyLogo}
+                              alt="Logo preview"
+                              className="w-full h-full object-contain"
+                            />
+                          )}
+                        </div>
+                        <div className="flex flex-col space-y-2">
+                          <ColorPicker
+                            label="Background Color"
+                            value={item.logoBgColor && item.logoBgColor !== "none" ? item.logoBgColor : "#ffffff"}
+                            onChange={(color) => updateItem(index, { logoBgColor: color })}
+                            showTransparent={true}
                           />
 
-                        ) : (
-                          <img
-                            style={{
-                              backgroundColor: item.logoBgColor || '#ffffff',
-                              borderRadius: `${item.logoRoundness || 16}%`
-                            }}
-                            src={item.companyLogo}
-                            alt="Logo preview"
-                            className="w-full h-full object-contain"
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1 space-y-2">
-                        <ColorPicker
-                          label="Background Color"
-                          value={item.logoBgColor && item.logoBgColor !== 'none' ? item.logoBgColor : '#ffffff'}
-                          onChange={(color) => updateItem(index, { logoBgColor: color })}
-                          showTransparent={true}
-                        />
-                        
-                        <div>
-                          <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                            Roundness: {item.logoRoundness || 16}%
-                          </label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={item.logoRoundness || 16}
-                            onChange={(e) => updateItem(index, { logoRoundness: parseInt(e.target.value) })}
-                            className="w-full"
-                          />
+                          <div>
+                            <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                              Roundness: {item.logoRoundness || 16}%
+                            </label>
+                            <input
+                              type="range"
+                              min="0"
+                              max="100"
+                              value={item.logoRoundness || 16}
+                              onChange={(e) =>
+                                updateItem(index, { logoRoundness: parseInt(e.target.value) })
+                              }
+                              className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
 
-                {/* Dates */}
-                <div className="grid grid-cols-1 gap-2">
+                  {/* Dates */}
+                  <div className="grid grid-cols-1 gap-2">
+                    <Input
+                      type="text"
+                      value={item.startDate}
+                      onChange={(e) => updateItem(index, { startDate: e.target.value })}
+                      placeholder="Start Date"
+                      label="Start Date"
+                    />
+                    <Input
+                      type="text"
+                      value={item.endDate || ""}
+                      onChange={(e) => updateItem(index, { endDate: e.target.value })}
+                      placeholder="End Date (or leave empty)"
+                      label="End Date"
+                    />
+                  </div>
 
-                  <Input
-                    type="text"
-                    value={item.startDate}
-                    onChange={(e) => updateItem(index, { startDate: e.target.value })}
-                    placeholder="Start Date"
-                    label="Start Date"
-                  />
-
-                  <Input
-                    type="text"
-                    value={item.endDate || ''}
-                    onChange={(e) => updateItem(index, { endDate: e.target.value })}
-                    placeholder="End Date (or leave empty)"
-                    label="End Date"
-                  />
-                </div>
-
-                {/* Description with Markdown Support */}
-                <div className="space-y-2">
-                  {/* <div className="flex items-center justify-between">
-                    <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                      Description (Markdown supported: **bold**, *italic*, [link](url), #chip, lists)
-                    </label>
-                    <button
-                      onClick={() => togglePreview(index)}
-                      className="flex items-center gap-1 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
-                    >
-                      {previewMode[index] ? (
-                        <>
-                          <EyeOff className="w-3 h-3" />
-                          Edit
-                        </>
-                      ) : (
-                        <>
-                          <Eye className="w-3 h-3" />
-                          Preview
-                        </>
-                      )}
-                    </button>
-                  </div> */}
-
-                  <div>
+                  {/* Description */}
+                  <div className="space-y-3">
                     <div className="flex items-center gap-2 mb-2">
-                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Description</label>
+                      <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                        Description
+                      </label>
 
-                      <div className="flex items-center gap-2">
+                      <div className="relative" onMouseEnter={showInfo} onMouseLeave={startHideTimer}>
+                        <Button type="button" aria-label="Markdown help" variant="ghost">
+                          <Info className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+                        </Button>
+
                         <div
-                          className="relative"
+                          className={`absolute right-[-100] bottom-full mb-2 w-60 text-sm rounded shadow-lg border bg-white dark:bg-neutral-800 p-3 z-50 transition-opacity ${infoVisible ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                            }`}
                           onMouseEnter={showInfo}
                           onMouseLeave={startHideTimer}
                         >
-                          <Button
-                            type="button"
-                            aria-label="Markdown help"
-                            variant="ghost"
-                          >
-                            <Info className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
-                          </Button>
-
-                          <div
-                            className={`absolute right-[-100]  bottom-full mb-2 w-60 text-sm rounded shadow-lg border bg-white dark:bg-neutral-800 p-3 z-50 transition-opacity ${infoVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-                            onMouseEnter={showInfo}
-                            onMouseLeave={startHideTimer}
-                          >
-                            <div className="text-neutral-700 dark:text-neutral-300">
-                              Quick Markdown help:
-                              <ul className="list-disc ml-4 mt-2">
-                                <li><strong>Bullets:</strong> start a line with <code>-</code> or <code>*</code></li>
-                                <li><strong>Numbered:</strong> <code>1. Item</code></li>
-                                <li><strong>Bold:</strong> <code>**bold**</code>, <strong>Bold</strong></li>
-                                <li><strong>Italic:</strong> <code>*italic*</code>, <em>Italic</em></li>
-                                <li><strong>Link:</strong> <code>[text](https://...)</code></li>
-                                <li><strong>Chip:</strong> use <code>#chipname</code> to insert a chip</li>
-                              </ul>
-                            </div>
+                          <div className="text-neutral-700 dark:text-neutral-300">
+                            Quick Markdown help:
+                            <ul className="list-disc ml-4 mt-2">
+                              <li>
+                                <strong>Bullets:</strong> start a line with <code>-</code> or <code>*</code>
+                              </li>
+                              <li>
+                                <strong>Numbered:</strong> <code>1. Item</code>
+                              </li>
+                              <li>
+                                <strong>Bold:</strong> <code>**bold**</code>, <strong>Bold</strong>
+                              </li>
+                              <li>
+                                <strong>Italic:</strong> <code>*italic*</code>, <em>Italic</em>
+                              </li>
+                              <li>
+                                <strong>Link:</strong> <code>[text](https://...)</code>
+                              </li>
+                              <li>
+                                <strong>Chip:</strong> use <code>#chipname</code> to insert a chip
+                              </li>
+                            </ul>
                           </div>
                         </div>
                       </div>
@@ -548,84 +743,83 @@ export function ExperienceEditor({ items, onChange }: ExperienceEditorProps) {
 
                     {previewMode[index] ? (
                       <div className="min-h-[80px] p-3 bg-white dark:bg-neutral-900 rounded border border-neutral-300 dark:border-neutral-600 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed space-y-1">
-                        {parseDescriptionText(item.description, item.chipLogos || {})}
+                        {/* Markdown parsed description */}
                       </div>
                     ) : (
                       <Textarea
                         value={item.description}
                         onChange={(e) => updateItem(index, { description: e.target.value })}
-                        placeholder="Description of your role and achievements. Use:\n- Bullet points\n1. Numbered lists\n**bold** *italic* [link](url) #chips"
+                        placeholder="Write your responsibilities here"
                         rows={8}
                       />
                     )}
                   </div>
-                </div>
 
-                {/* Chips Section */}
-                <div className="space-y-2">
-                  <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                    Technologies / Skills
-                  </label>
+                  {/* Chips Section */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                      Technologies / Skills
+                    </label>
 
-                  {item.chips && item.chips.length > 0 && (
-                    <div className="space-y-2">
-                      {item.chips.map((chip, chipIndex) => (
-                        <div key={chipIndex} className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="text"
-                              value={chip}
-                              onChange={(e) => updateChip(index, chipIndex, e.target.value)}
-                              placeholder="Chip name (e.g., React, TypeScript)"
-                              className="flex-1 text-base py-2.5"
+                    {item.chips && item.chips.length > 0 && (
+                      <div className="space-y-2">
+                        {item.chips.map((chip, chipIndex) => (
+                          <div key={chipIndex} className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Input
+                                type="text"
+                                value={chip}
+                                onChange={(e) => updateChip(index, chipIndex, e.target.value)}
+                                placeholder="Chip name (e.g., React)"
+                                className="flex-1 text-base py-2.5"
+                              />
+                              <Button
+                                onClick={() => removeChip(index, chipIndex)}
+                                className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
+                                variant="ghost"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+
+                            {/* Chip Logo Editor */}
+                            <SimpleChipLogoEditor
+                              chipName={chip}
+                              logoUrl={(item.chipLogos || {})[chip] || ""}
+                              onLogoChange={(logoUrl) => updateChipLogo(index, chip, logoUrl)}
                             />
-                            <Button
-                              onClick={() => removeChip(index, chipIndex)}
-                              className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
-                              variant="ghost"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
                           </div>
+                        ))}
+                      </div>
+                    )}
 
-                          {/* Chip Logo Editor */}
-                          <SimpleChipLogoEditor
-                            chipName={chip}
-                            logoUrl={(item.chipLogos || {})[chip] || ''}
-                            onLogoChange={(logoUrl) => updateChipLogo(index, chip, logoUrl)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <Button
-                    variant="secondary"
-                    onClick={() => addChip(index)}
-                    className="w-full"
-                    size="sm"
-                  >
-                    <Plus className="w-3 h-3 mr-1" />
-                    Add Chip
-                  </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => addChip(index)}
+                      className="w-full"
+                      size="sm"
+                    >
+                      <Plus className="w-3 h-3 mr-1" />
+                      Add Chip
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )
 
-
-            </div>
+            })}
           </div>
-        ))}
+
+          <Button
+            variant="secondary"
+            onClick={addItem}
+            className="w-full"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Experience
+          </Button>
+        </div>
       </div>
 
-      <Button
-        variant="secondary"
-        onClick={addItem}
-        className="w-full"
-      >
-        <Plus className="w-4 h-4 mr-2" />
-        Add Experience
-      </Button>
-      </div>
     </div>
   );
 }

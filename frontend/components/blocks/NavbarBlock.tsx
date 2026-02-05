@@ -1,10 +1,10 @@
 import React from 'react';
-import { NavbarBlockProps } from '@/types';
+import { NavbarBlockPropsExtended } from '@/types';
 import { Menu, Search, X, Sun, Moon, Monitor } from 'lucide-react';
 import { applyThemeMode, getInitialThemeMode, ThemeMode } from '@/lib/theme';
 
 interface NavbarBlockRendererProps {
-  props: NavbarBlockProps;
+  props: NavbarBlockPropsExtended;
 }
 
 export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
@@ -108,7 +108,8 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center h-16 justify-between">
           {/* Logo/Brand */}
-          <div className={`flex items-center h-16 overflow-hidden w-full ${logoAlignment === 'center' ? 'justify-center' : logoAlignment === 'right' ? 'justify-end' : 'justify-start'}`}>
+          {(props.showLogo ?? true) && (
+          <div className={`flex items-center h-16 gap-2 overflow-hidden w-full ${logoAlignment === 'center' ? 'justify-center' : logoAlignment === 'right' ? 'justify-end' : 'justify-start'}`}>
             {props.logoUrl && (
               <div
                 className="overflow-hidden shadow-sm"
@@ -134,11 +135,13 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
               </span>
             )}
           </div>
+          )}
 
           {/* Desktop Navigation */}
-          <div className={`hidden md:flex items-center ml-4 w-full ${navAlignment === 'center' ? 'justify-center' : navAlignment === 'right' ? 'justify-end' : 'justify-start'}`}>
-            <div style={{ display: 'flex', gap: `${itemsGap}px`, alignItems: 'center' }}>
-              {navItems.map((link: any, index: number) => (
+          {(props.showNavigation ?? true) && (
+            <div className={`hidden md:flex items-center ml-4 w-full ${navAlignment === 'center' ? 'justify-center' : navAlignment === 'right' ? 'justify-end' : 'justify-start'}`}>
+              <div style={{ display: 'flex', gap: `${itemsGap}px`, alignItems: 'center' }}>
+                {navItems.map((link: any, index: number) => (
                 <a
                   key={link.id || index}
                   href={link.href}
@@ -147,8 +150,9 @@ export function NavbarBlockRenderer({ props }: NavbarBlockRendererProps) {
                   {link.label}
                 </a>
               ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Search and Actions */}
           <div className="flex items-center gap-2 ml-auto md:ml-4">

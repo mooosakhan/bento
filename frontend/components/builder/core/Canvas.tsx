@@ -11,9 +11,10 @@ interface CanvasProps {
   viewMode: 'mobile' | 'tablet' | 'desktop';
   cursorMode: 'select' | 'grab';
   sectionGap?: number;
+  portfolioWidth?: number;
 }
 
-export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, cursorMode, sectionGap = 16 }: CanvasProps) {
+export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, cursorMode, sectionGap = 16, portfolioWidth = 0 }: CanvasProps) {
   const { setNodeRef } = useDroppable({
     id: 'canvas',
   });
@@ -25,11 +26,17 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, curso
 
   const cursorStyle = cursorMode === 'grab' ? 'cursor-grab active:cursor-grabbing' : 'cursor-default';
 
+  // Use custom width if set, otherwise use responsive width
+  const customWidthStyle = portfolioWidth && portfolioWidth > 0 
+    ? { width: `${portfolioWidth}px`, maxWidth: '100%' } 
+    : {};
+
   return (
     <div className={`h-full overflow-y-auto scrollbar-light scrollbar-dark bg-neutral-100 dark:bg-black p-3 ${cursorStyle}`}>
       <div 
         ref={setNodeRef}
-        className={`mx-auto ${containerWidth} min-h-full bg-neutral-100 dark:bg-black rounded-3xl  p-6 transition-all duration-300`}
+        className={`mx-auto ${portfolioWidth && portfolioWidth > 0 ? '' : containerWidth} min-h-full bg-neutral-100 dark:bg-black rounded-3xl p-6 transition-all duration-300`}
+        style={customWidthStyle}
       >
         {blocks.length === 0 ? (
           <div className="flex items-center justify-center h-64 border-2 border-dashed border-neutral-300 dark:border-neutral-600 rounded-2xl">
@@ -48,7 +55,7 @@ export function Canvas({ blocks, selectedBlockId, onSelectBlock, viewMode, curso
                 <div 
                   key={block.id}
                   style={{ 
-                    marginTop: index === 0 ? 0 : `${block.gapBefore ?? sectionGap}px` 
+                    marginTop: `${block.gapBefore ?? sectionGap}px` 
                   }}
                 >
                   <SortableBlockItem

@@ -1,6 +1,6 @@
 import React from 'react';
 import { HeaderBlockProps } from '@/types';
-import { MapPin } from 'lucide-react';
+import { MapPin, Mail } from 'lucide-react';
 
 interface HeaderBlockRendererProps {
   props: HeaderBlockProps;
@@ -140,26 +140,47 @@ export function HeaderBlockRenderer({ props }: HeaderBlockRendererProps) {
   const avatarBgColor = props.avatarBgColor || '#ffffff';
   const avatarRoundness = props.avatarRoundness !== undefined ? props.avatarRoundness : 100;
   const avatarSize = props.avatarSize || 96;
+  const mainLayoutAlignment = props.mainLayoutAlignment || 'left';
   const contentAlignment = props.contentAlignment || 'left';
+  const avatarPosition = props.avatarPosition || 'top';
   const avatarToContentGap = props.avatarToContentGap !== undefined ? props.avatarToContentGap : 28;
   const contentItemsGap = props.contentItemsGap !== undefined ? props.contentItemsGap : 20;
   const nameFontSize = props.nameFontSize || 36;
   const bioFontSize = props.bioFontSize || 18;
   const bioLineHeight = props.bioLineHeight !== undefined ? props.bioLineHeight : 1.56;
+  const bioAlignment = props.bioAlignment || contentAlignment;
+  const bioMaxWidth = props.bioMaxWidth || 0;
   
-  const alignmentClasses = {
+  const mainLayoutAlignmentClasses = {
+    left: 'items-start',
+    center: 'items-center',
+    right: 'items-end'
+  };
+
+  const contentAlignmentClasses = {
     left: 'items-start text-left',
     center: 'items-center text-center',
     right: 'items-end text-right'
   };
+
+  const bioAlignmentClasses = {
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end'
+  };
+
+  // Determine flex direction based on avatar position
+  const isHorizontal = avatarPosition === 'left' || avatarPosition === 'right';
+  const flexDirection = avatarPosition === 'right' ? 'flex-row-reverse' : avatarPosition === 'left' ? 'flex-row' : 'flex-col';
   
   return (
     <div 
-      className={`flex flex-col justify-start p-0 ${alignmentClasses[contentAlignment]}`}
+      className={`flex ${flexDirection} justify-start p-0 ${isHorizontal ? 'items-start' : mainLayoutAlignmentClasses[mainLayoutAlignment]}`}
       style={{ gap: `${avatarToContentGap}px` }}
     >
+      {(props.showAvatar ?? true) && (
       <div 
-        className={`overflow-hidden ${props.avatarShadow ? 'shadow-md' : ''} `}
+        className={`overflow-hidden ${props.avatarShadow ? 'shadow-md' : ''} flex-shrink-0`}
         style={{ 
           width: `${avatarSize}px`,
           height: `${avatarSize}px`,
@@ -173,32 +194,47 @@ export function HeaderBlockRenderer({ props }: HeaderBlockRendererProps) {
           className="w-full h-full object-cover object-center"
         />
       </div>
+      )}
       <div 
-        className={`flex flex-col w-full ${alignmentClasses[contentAlignment]}`}
+        className={`flex flex-col ${isHorizontal ? 'flex-1' : 'w-full'} ${contentAlignmentClasses[contentAlignment]}`}
         style={{ gap: `${contentItemsGap}px` }}
       >
         <h1 
           className="font-bold text-neutral-900 dark:text-white"
           style={{ fontSize: `${nameFontSize}px` }}
-        >
+        > 
           {props.displayName || 'Your Name'}
         </h1>
-        {props.bio && (
-          <p 
-            className="text-neutral-600 dark:text-neutral-400 flex flex-wrap items-center gap-1"
-            style={{ 
-              fontSize: `${bioFontSize}px`,
-              lineHeight: bioLineHeight 
-            }}
+        {(props.showBio ?? true) && props.bio && (
+          <div 
+            className={`flex flex-col ${bioAlignmentClasses[bioAlignment]}`}
+            style={{ maxWidth: bioMaxWidth > 0 ? `${bioMaxWidth}px` : '100%' }}
           >
-            {parseBioText(props.bio, chipLogos)}
-          </p>
+            <p 
+              className="text-neutral-600 dark:text-neutral-400 flex flex-wrap items-center gap-1"
+              style={{  
+                fontSize: `${bioFontSize}px`,
+                lineHeight: bioLineHeight 
+              }}
+            >
+              {parseBioText(props.bio, chipLogos)}
+            </p>
+          </div>
         )}
         
-        {props.location && (
-          <div className="flex items-center gap-1 mt-3 text-sm text-neutral-500 dark:text-neutral-500">
+        {(props.showLocation ?? true) && props.location && (
+          <div className="flex items-center gap-1  text-sm text-neutral-500 dark:text-neutral-500">
             <MapPin className="w-4 h-4" />
             <span>{props.location}</span>
+          </div>
+        )}
+        
+        {(props.showEmail ?? true) && props.email && (
+          <div className="flex items-center gap-1 text-sm text-neutral-500 dark:text-neutral-500">
+            <Mail className="w-4 h-4" />
+            <a href={`mailto:${props.email}`} className="hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors">
+              {props.email}
+            </a>
           </div>
         )}
       </div>
